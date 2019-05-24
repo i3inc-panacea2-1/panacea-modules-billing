@@ -1,0 +1,183 @@
+﻿<UserControl x:Class="Panacea.Modules.Billing.Views.ServiceWizard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Panacea.Modules.Billing.Views"
+             xmlns:my="clr-namespace:Panacea.Modules.Billing"
+             xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+             xmlns:my1="clr-namespace:Panacea.Modules.Billing.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <Style TargetType="{x:Type TabControl}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <Grid KeyboardNavigation.TabNavigation="Local">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <TabPanel
+                                        Name="HeaderPanel"
+                                        Grid.Row="0"
+                                        Margin="0"
+                                        HorizontalAlignment="Center"
+                                        Panel.ZIndex="1"
+                                        IsItemsHost="True"
+                                        KeyboardNavigation.TabIndex="1" />
+                                </Grid>
+                                <Border
+                                    Name="Border"
+                                    Grid.Row="1"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    CornerRadius="2"
+                                    KeyboardNavigation.DirectionalNavigation="Contained"
+                                    KeyboardNavigation.TabIndex="2"
+                                    KeyboardNavigation.TabNavigation="Local">
+                                    <ContentPresenter
+                                        Name="PART_SelectedContentHost"
+                                        Margin="0"
+                                        ContentSource="SelectedContent" />
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="Gray" />
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="Transparent" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style TargetType="TabItem">
+                <Setter Property="FontSize" Value="{DynamicResource FontSize-Normal}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Grid Name="Panel" HorizontalAlignment="Center">
+                                <Border
+                                    Name="border"
+                                    BorderBrush="Black"
+                                    BorderThickness="0" />
+                                <ContentPresenter
+                                    x:Name="ContentSite"
+                                    Margin="20,15,20,10"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    ContentSource="Header" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Panel" Property="Background" Value="#44ffffff" />
+                                    <Setter TargetName="border" Property="BorderThickness" Value="0,0,0,1" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="False">
+                                    <Setter Property="Foreground" Value="#88000000" />
+                                    <Setter TargetName="border" Property="BorderThickness" Value="0" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Panacea;component/Resources/Images/services-background.jpg" Opacity="0.2" />
+        </Grid.Background>
+        <TabControl Name="tabs" SelectedIndex="1">
+            <TabItem
+                Header="{multilinguality:Translate '1. Choose Package',
+                                                   'core'}"
+                IsEnabled="false"
+                IsSelected="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <my1:Services
+                        x:Name="services"
+                        />
+                    <!--<Button HorizontalAlignment="Left" Grid.Row="1" FontSize="{DynamicResource FontSize-Normal}" Padding="30,10" Margin="5" Click="BtnRequestAssistance_OnClick"  Background="#12a5f7" Content="{multilinguality:Translate 'Request Assistance', 'core'}"></Button>
+                    <Button HorizontalAlignment="Right" Grid.Row="1" Name="btnStep1" FontSize="{DynamicResource FontSize-Normal}" Padding="30,10" Margin="5" Click="btnStep1_Click" Background="#12a5f7" Content="{multilinguality:Translate 'Next', 'core'}"></Button>-->
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="{multilinguality:Translate '2. User Account', 'core'}" IsEnabled="false">
+                <Grid>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="{multilinguality:Translate '3. Make Payment', 'core'}" IsEnabled="false">
+                <Grid>
+
+                    <ProgressBar IsIndeterminate="True" />
+                    <WindowsFormsHost Name="wfh" Visibility="Collapsed" />
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="{multilinguality:Translate '4. Confirmation', 'core'}" IsEnabled="false">
+                <Grid>
+                    <StackPanel Name="success">
+                        <TextBlock
+                            Margin="0,150"
+                            FontSize="{DynamicResource FontSize-Xx-Large}"
+                            Text="{multilinguality:Translate 'Your purchase has been completed!',
+                                                             'core'}"
+                            TextAlignment="Center" />
+
+                        <Button
+                            Margin="0,0"
+                            Padding="20"
+                            HorizontalAlignment="Center"
+                            Background="{DynamicResource ColorSuccess}"
+                            Content="{multilinguality:Translate 'Start using Panacea',
+                                                                'core'}"
+                            FontSize="{DynamicResource FontSize-Large}" />
+                    </StackPanel>
+                    <StackPanel Name="cancelled">
+                        <TextBlock
+                            Margin="0,150"
+                            FontSize="{DynamicResource FontSize-Xx-Large}"
+                            Text="{multilinguality:Translate 'Your purchase has been cancelled.',
+                                                             'core'}"
+                            TextAlignment="Center" />
+
+                        <Button
+                            Name="btnBrowse"
+                            Margin="3"
+                            Padding="20"
+                            HorizontalAlignment="Center"
+                            Background="{DynamicResource ColorSuccess}"
+                            Content="{multilinguality:Translate 'Browse Content',
+                                                                'core'}"
+                            FontSize="{DynamicResource FontSize-Large}" />
+                        <Button
+                            Width="{Binding ElementName=btnBrowse, Path=ActualWidth}"
+                            Margin="3"
+                            Padding="20"
+                            HorizontalAlignment="Center"
+                            Background="{DynamicResource ColorInformation}"
+                            Content="{multilinguality:Translate 'Buy Service',
+                                                                'core'}"
+                            FontSize="{DynamicResource FontSize-Large}" />
+
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
