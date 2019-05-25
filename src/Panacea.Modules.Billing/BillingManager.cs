@@ -22,12 +22,11 @@ namespace Panacea.Modules.Billing
 
         public Task<bool> ConsumeItemAsync(string pluginName, ServerItem item)
         {
-            var source = new TaskCompletionSource<bool>();
             if(_core.TryGetUiManager(out IUiManager ui))
             {
-                ui.ShowPopup(new ConsumeItemPopupViewModel());
+                return ui.ShowPopup(new ConsumeItemPopupViewModel());
             }
-            return source.Task;
+            return Task.FromResult(false);
         }
 
         public Task<bool> ConsumeItemOrRequestServiceAsync(string message, string pluginName, ServerItem item)

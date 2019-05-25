@@ -1,4 +1,6 @@
-﻿using Panacea.Modules.Billing.Views;
+﻿using Panacea.Controls;
+using Panacea.Modularity.UiManager;
+using Panacea.Modules.Billing.Views;
 using Panacea.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,16 @@ using System.Threading.Tasks;
 namespace Panacea.Modules.Billing.ViewModels
 {
     [View(typeof(ConsumeItemPopup))]
-    class ConsumeItemPopupViewModel:ViewModelBase
+    class ConsumeItemPopupViewModel:PopupViewModelBase<bool>
     {
+        public ConsumeItemPopupViewModel()
+        {
+            YesCommand = new RelayCommand(args => taskCompletionSource.SetResult(true));
+            NoCommand = new RelayCommand(args => taskCompletionSource.SetResult(false));
+        }
+
+        public RelayCommand YesCommand { get; }
+
+        public RelayCommand NoCommand { get; }
     }
 }
