@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:Panacea.Modules.Billing.Converters"
              xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
              xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+             Name="MainControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -38,13 +39,29 @@
             </DoubleAnimation>
 
         </Storyboard>
+        <Style TargetType="Button" x:Key="PackageButton">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <pcontrols:FastShadow
+                        BlurRadius="10"
+                        ShadowDepth="0"
+                        Margin="10"
+                        Color="#22000000">
+                            <ContentPresenter/>
+                        </pcontrols:FastShadow>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <local:PaginatingItemsControl
         x:Name="itemsControl"
         Margin="0"
         ItemsPerPage="6"
-        ItemsSource2="{Binding ElementName=MainControl, Path=Packages}">
+        ItemsSource="{Binding ElementName=MainControl, Path=Packages}">
         <local:PaginatingItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <UniformGrid
@@ -56,11 +73,12 @@
         <local:PaginatingItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type libserv:Package}">
                 <!--  RenderTransform="{Binding ScaleTransform}"  -->
+
                 <Button
-                    Margin="10"
-                    RenderTransformOrigin=".5 .5"
-                    Style="{DynamicResource styless}"
-                    Tag="{Binding}">
+                        Style="{StaticResource PackageButton}"
+                        Margin="10"
+                        RenderTransformOrigin=".5 .5"
+                        Tag="{Binding}">
                     <Button.RenderTransform>
                         <ScaleTransform />
                     </Button.RenderTransform>
@@ -69,102 +87,94 @@
                             <BeginStoryboard Storyboard="{StaticResource ClickEffect}" />
                         </EventTrigger>
                     </Button.Triggers>
-
-                    <pcontrols:FastShadow
-                        Panel.ZIndex="50"
-                        BlurRadius="10"
-                        ShadowDepth="0"
-                        Color="#22000000">
-
-
-                        <Grid Background="White">
-                            <pcontrols:CacheImage
+                    <Grid Background="White">
+                        <pcontrols:CacheImage
                                 Margin="1"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 ImageUrl="{Binding ImgThumbnail.Image}"
                                 Opacity="1"
                                 Stretch="UniformToFill" />
-                            <Grid Margin="0">
-                                <Grid.Background>
-                                    <LinearGradientBrush Opacity="0.95" StartPoint="0.504,0.03" EndPoint="0.504,1.5">
-                                        <GradientStop Offset="0" Color="#f9f9f9" />
-                                        <GradientStop Offset="0.567" Color="#fdfdfd" />
-                                    </LinearGradientBrush>
-                                </Grid.Background>
+                        <Grid Margin="0">
+                            <Grid.Background>
+                                <LinearGradientBrush Opacity="0.95" StartPoint="0.504,0.03" EndPoint="0.504,1.5">
+                                    <GradientStop Offset="0" Color="#f9f9f9" />
+                                    <GradientStop Offset="0.567" Color="#fdfdfd" />
+                                </LinearGradientBrush>
+                            </Grid.Background>
 
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                <TextBlock
+                            <TextBlock
                                     Padding="10,10,10,10"
-                                    FontSize="{DynamicResource FontSize-Large}"
+                                    pcontrols:Material.RelativeFontSizeRatio="1.1"
                                     FontWeight="Bold"
                                     Foreground="#222"
                                     Text="{Binding Name}"
                                     TextWrapping="Wrap" />
-                                <ScrollViewer
+                            <ScrollViewer
                                     Grid.Row="1"
                                     Margin="0"
                                     HorizontalScrollBarVisibility="Disabled">
-                                    <TextBlock
+                                <TextBlock
                                         Margin="10,5,10,5"
-                                        FontSize="{DynamicResource FontSize-Small}"
+                                        pcontrols:Material.RelativeFontSizeRatio=".9"
                                         Foreground="Black"
                                         Text="{Binding Description}"
                                         TextAlignment="Justify"
                                         TextWrapping="Wrap" />
-                                </ScrollViewer>
-                                <TextBlock
+                            </ScrollViewer>
+                            <TextBlock
                                     Grid.Row="2"
                                     Margin="0"
                                     VerticalAlignment="Center"
-                                    FontSize="{DynamicResource FontSize-Small}"
+                                    pcontrols:Material.RelativeFontSizeRatio=".9"
                                     FontStyle="Italic"
                                     Foreground="DodgerBlue"
                                     Text="{Binding SupportText}"
                                     TextAlignment="Center" />
-                                <StackPanel
+                            <StackPanel
                                     Grid.Row="3"
                                     Margin="0,0,0,40"
                                     HorizontalAlignment="Stretch"
                                     Orientation="Vertical">
 
-                                    <TextBlock
+                                <TextBlock
                                         Margin="10,0,10,5"
                                         VerticalAlignment="Center"
-                                        FontSize="{DynamicResource FontSize-X-Large}"
+                                       pcontrols:Material.RelativeFontSizeRatio="1.2"
                                         Foreground="Black"
                                         Text="{Binding DurationInDaysString.Text}"
                                         TextAlignment="Center"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding IsPricePerDay, Converter={StaticResource NotBoolToVis}}" />
 
-                                    <TextBlock
+                                <TextBlock
                                         Margin="10,0,10,5"
                                         VerticalAlignment="Center"
-                                        FontSize="{DynamicResource FontSize-X-Large}"
+                                        pcontrols:Material.RelativeFontSizeRatio="1.2"
                                         Foreground="Black"
                                         Text="{multilinguality:Translate 'Flexible',
                                                                          'core'}"
                                         TextAlignment="Center"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding IsPricePerDay, Converter={StaticResource BoolToVis}}" />
-                                </StackPanel>
-                                <Grid Grid.Row="4" Margin="0,0,0,10">
-                                    <Border
+                            </StackPanel>
+                            <Grid Grid.Row="4" Margin="0,0,0,10">
+                                <Border
                                         Width="10"
                                         Height="{Binding ElementName=Ribbon, Path=ActualHeight}"
                                         Margin="-10,0,0,-10"
                                         HorizontalAlignment="Left"
                                         Background="#B38E16">
-                                        <Path
+                                    <Path
                                             Height="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=ActualHeight}"
                                             Margin="0,0,0,0"
                                             HorizontalAlignment="Left"
@@ -172,14 +182,14 @@
                                             Data="F1 M 15.8469,10.7846L 12.8223,0L 12.8223,14.7495L 12.8223,14.7495L 12.8223,21.5697L 15.8469,10.7846 Z "
                                             Fill="White"
                                             Stretch="Uniform" />
-                                    </Border>
-                                    <Border
+                                </Border>
+                                <Border
                                         Width="10"
                                         Height="{Binding ElementName=Ribbon, Path=ActualHeight}"
                                         Margin="0,0,-10,-10"
                                         HorizontalAlignment="Right"
                                         Background="#B38E16">
-                                        <Path
+                                    <Path
                                             Height="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=ActualHeight}"
                                             Margin="0,0,-1,0"
                                             HorizontalAlignment="Right"
@@ -187,64 +197,53 @@
                                             Data="F1 M 15.8469,10.7846L 12.8223,0L 12.8223,14.7495L 12.8223,14.7495L 12.8223,21.5697L 15.8469,10.7846 Z "
                                             Fill="White"
                                             Stretch="Uniform">
-                                            <Path.LayoutTransform>
-                                                <RotateTransform Angle="180" />
-                                            </Path.LayoutTransform>
-                                        </Path>
-                                    </Border>
-                                    <Border
+                                        <Path.LayoutTransform>
+                                            <RotateTransform Angle="180" />
+                                        </Path.LayoutTransform>
+                                    </Path>
+                                </Border>
+                                <Border
                                         Name="Ribbon"
                                         Margin="-2,2"
                                         VerticalAlignment="Bottom"
                                         Background="#D4AF37"
                                         Visibility="{Binding Featured, Converter={StaticResource BoolToVis}}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="1.6*" />
-                                                <ColumnDefinition Width="2*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <local:PriceTag
-                                                Grid.Column="1"
-                                                Background="#D4AF37"
-                                                Service="{Binding}" />
-                                        </Grid>
-
-                                    </Border>
-                                </Grid>
-
-                                <Grid
-                                    Grid.Row="4"
-                                    Margin="-1,0"
-                                    Background="DodgerBlue"
-                                    Visibility="{Binding Featured, Converter={StaticResource NotBoolToVis}}">
-                                    <!--<controls1:CacheImage Height="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualHeight}"
-									                      HorizontalAlignment="Left"
-									                      ImageUrl="{Binding ImgThumbnail.Image}" Stretch="Uniform" />-->
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="2*" />
                                             <ColumnDefinition Width="1.6*" />
                                             <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-
                                         <local:PriceTag
+                                                Grid.Column="1"
+                                                Background="#D4AF37"
+                                                Service="{Binding}" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                            <Grid
+                                    Grid.Row="4"
+                                    Margin="-1,0"
+                                    Background="DodgerBlue"
+                                    Visibility="{Binding Featured, Converter={StaticResource NotBoolToVis}}">
+                                <!--<controls1:CacheImage Height="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualHeight}"
+									                      HorizontalAlignment="Left"
+									                      ImageUrl="{Binding ImgThumbnail.Image}" Stretch="Uniform" />-->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.6*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <local:PriceTag
                                             Grid.Column="1"
                                             Background="DodgerBlue"
                                             Service="{Binding}" />
-                                    </Grid>
-
-
                                 </Grid>
-
-
                             </Grid>
-
                         </Grid>
-
-                    </pcontrols:FastShadow>
-
+                    </Grid>
                 </Button>
             </DataTemplate>
         </local:PaginatingItemsControl.ItemTemplate>

@@ -1,4 +1,5 @@
-﻿using Panacea.Modularity.UiManager;
+﻿using Panacea.Controls;
+using Panacea.Modularity.UiManager;
 using Panacea.Modules.Billing.Views;
 using Panacea.Mvvm;
 using System;
@@ -10,7 +11,27 @@ using System.Threading.Tasks;
 namespace Panacea.Modules.Billing.ViewModels
 {
     [View(typeof(RequestServicePopup))]
-    class RequestServicePopupViewModel: PopupViewModelBase<bool>
+    class RequestServicePopupViewModel: PopupViewModelBase<RequestServiceResult>
     {
+        public RequestServicePopupViewModel()
+        {
+            SignInCommand = new RelayCommand(args =>
+            {
+                taskCompletionSource.SetResult(RequestServiceResult.SignIn);
+            });
+            BuyServiceCommand = new RelayCommand(args =>
+            {
+                taskCompletionSource.SetResult(RequestServiceResult.BuyService);
+            });
+        }
+
+        public RelayCommand SignInCommand { get; }
+        public RelayCommand BuyServiceCommand { get; }
+    }
+
+    public enum RequestServiceResult
+    {
+        SignIn,
+        BuyService
     }
 }

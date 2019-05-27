@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace Panacea.Modules.Billing
 {
-    class BillingManager:IBillingManager
+    class BillingManager : IBillingManager
     {
         private readonly PanaceaServices _core;
+        private List<Service> _services;
 
         public BillingManager(PanaceaServices core)
         {
@@ -30,12 +31,15 @@ namespace Panacea.Modules.Billing
                     await ui.ShowPopup(new RequestServicePopupViewModel());
                     if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
                     {
-                        //await userManager.RequestLoginAsync();
+                        if (await userManager.LoginAsync())
+                        {
+
+                        }
                     }
                 }
-               
-                    //return ui.ShowPopup(new ConsumeItemPopupViewModel());
-                
+
+                //return ui.ShowPopup(new ConsumeItemPopupViewModel());
+
             }
             return null;
             //return Task.FromResult(false);
@@ -50,26 +54,48 @@ namespace Panacea.Modules.Billing
 
         public async Task<Service> GetServiceAsync(string text, string pluginName)
         {
-            if (_core.TryGetUiManager(out IUiManager ui))
+            if (await EnsureLoggedIn())
             {
-                if (_core.UserService.User.Id == null)
-                {
-                    await ui.ShowPopup(new RequestServicePopupViewModel());
-                    if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
-                    {
-                        //await userManager.RequestLoginAsync();
-                    }
-                }
-
-                //return ui.ShowPopup(new ConsumeItemPopupViewModel());
-
+                
             }
             return null;
+        }
+
+        protected async Task<bool> EnsureLoggedIn()
+        {
+            if (_core.UserService.User.Id != null) return true;
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                var res = await ui.ShowPopup(new RequestServicePopupViewModel());
+                if (res == RequestServiceResult.SignIn)
+                {
+                    if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
+                    {
+                        return await userManager.LoginAsync();
+                        
+                    }
+                }
+                else
+                {
+                    ui.Navigate(new ServiceWizardViewModel(_core));
+                }
+            }
+            return false;
         }
 
         public bool IsPluginFree(string plugnName)
         {
             return false;
+        }
+
+        protected async Task GetUserServicesAsync()
+        {
+            var servicesResponse =
+                await _core.HttpClient.GetObjectAsync<List<Service>>("billing/get_user_services/", allowCache: false);
+            if (servicesResponse.Success)
+            {
+                _services = servicesResponse.Result;
+            }
         }
     }
 }

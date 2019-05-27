@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panacea.Modularity.Billing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,53 @@ namespace Panacea.Modules.Billing.Controls
     /// </summary>
     public partial class ServiceViewer : UserControl
     {
+
         public ServiceViewer()
         {
             InitializeComponent();
+        }
+
+        public static readonly DependencyProperty ServicesProperty =
+             DependencyProperty.Register("Services", typeof(List<Service>),
+             typeof(ServiceViewer), new FrameworkPropertyMetadata(null));
+
+        // .NET Property wrapper
+        public List<Service> Services
+        {
+            get { return (List<Service>)GetValue(ServicesProperty); }
+            set { SetValue(ServicesProperty, value); }
+        }
+
+        public event EventHandler Click;
+
+        private void Grid_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            object package = null;
+            var el = sender as FrameworkElement;
+            package = el.Tag;
+            if (!(package as Service).IsMore)
+                (package as Service).IsChecked = !(package as Service).IsChecked;
+            Click?.Invoke(package, EventArgs.Empty);
+
+        }
+
+        public List<Service> GetSelectedServices()
+        {
+            try
+            {
+                List<Service> serv = itemsControl.ItemsSource as List<Service>;
+
+                return serv.Where(s => s.IsChecked).ToList();
+            }
+            catch
+            {
+            }
+            return null;
+        }
+
+        public void Reset()
+        {
+
         }
     }
 }

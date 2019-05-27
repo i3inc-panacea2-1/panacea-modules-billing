@@ -72,6 +72,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -85,6 +86,7 @@
   <ItemGroup>
     <Compile Include="BillingManager.cs" />
     <Compile Include="BillingPlugin.cs" />
+    <Compile Include="Models\GetServicesAndPackagesResponse.cs" />
     <Compile Include="ViewModels\RequestServicePopupViewModel.cs" />
     <Compile Include="Views\ConsumeItemPopup.xaml.cs">
       <DependentUpon>ConsumeItemPopup.xaml</DependentUpon>
@@ -94,8 +96,8 @@
     </Compile>
     <Compile Include="Controls\PaginatingItemsControl.cs" />
     <Compile Include="Controls\PriceTag.cs" />
-    <Compile Include="Controls\Services.xaml.cs">
-      <DependentUpon>Services.xaml</DependentUpon>
+    <Compile Include="Controls\ServicesControl.xaml.cs">
+      <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ServiceViewer.xaml.cs">
       <DependentUpon>ServiceViewer.xaml</DependentUpon>
@@ -121,7 +123,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services.xaml">
+    <Page Include="Controls\ServicesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,10 +164,10 @@
       <Version>10.0.0</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.UserAccount">
-      <Version>0.0.1</Version>
+      <Version>1.0.0</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Multilinguality">
-      <Version>1.0.0</Version>
+      <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Mvvm">
       <Version>0.0.1</Version>
@@ -173,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\dollar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\services-background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

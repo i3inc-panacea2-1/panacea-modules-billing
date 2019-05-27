@@ -7,6 +7,7 @@
              xmlns:my="clr-namespace:Panacea.Modules.Billing"
              xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
              xmlns:my1="clr-namespace:Panacea.Modules.Billing.Controls"
+             Background="White"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -95,7 +96,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="pack://application:,,,/Panacea;component/Resources/Images/services-background.jpg" Opacity="0.2" />
+            <ImageBrush ImageSource="pack://application:,,,/Panacea.Modules.Billing;component/Resources/Images/services-background.jpg" Opacity="0.2" />
         </Grid.Background>
         <TabControl Name="tabs" SelectedIndex="1">
             <TabItem
@@ -108,20 +109,19 @@
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <my1:Services
+                    <my1:ServicesControl
                         x:Name="services"
-                        />
+                        Packages="{Binding Packages}"
+                        Services="{Binding Services}"
+                     
+                    />
                     <!--<Button HorizontalAlignment="Left" Grid.Row="1" FontSize="{DynamicResource FontSize-Normal}" Padding="30,10" Margin="5" Click="BtnRequestAssistance_OnClick"  Background="#12a5f7" Content="{multilinguality:Translate 'Request Assistance', 'core'}"></Button>
                     <Button HorizontalAlignment="Right" Grid.Row="1" Name="btnStep1" FontSize="{DynamicResource FontSize-Normal}" Padding="30,10" Margin="5" Click="btnStep1_Click" Background="#12a5f7" Content="{multilinguality:Translate 'Next', 'core'}"></Button>-->
                 </Grid>
 
             </TabItem>
-            <TabItem Header="{multilinguality:Translate '2. User Account', 'core'}" IsEnabled="false">
-                <Grid>
-
-                </Grid>
-            </TabItem>
-            <TabItem Header="{multilinguality:Translate '3. Make Payment', 'core'}" IsEnabled="false">
+           
+            <TabItem Header="{multilinguality:Translate '2. Make Payment', 'core'}" IsEnabled="false">
                 <Grid>
 
                     <ProgressBar IsIndeterminate="True" />
@@ -129,7 +129,7 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="{multilinguality:Translate '4. Confirmation', 'core'}" IsEnabled="false">
+            <TabItem Header="{multilinguality:Translate '3. Confirmation', 'core'}" IsEnabled="false">
                 <Grid>
                     <StackPanel Name="success">
                         <TextBlock
