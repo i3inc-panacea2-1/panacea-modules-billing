@@ -1,6 +1,7 @@
 ﻿using Panacea.Core;
 using Panacea.Models;
 using Panacea.Modularity.Billing;
+using Panacea.Modularity.UserAccount;
 using Panacea.Modularity.UiManager;
 using Panacea.Modules.Billing.ViewModels;
 using System;
@@ -20,38 +21,50 @@ namespace Panacea.Modules.Billing
             _core = core;
         }
 
-        public Task<bool> ConsumeItemAsync(string pluginName, ServerItem item)
+        public async Task<Service> GetServiceForItemAsync(string text, string pluginName, ServerItem item)
         {
-            if(_core.TryGetUiManager(out IUiManager ui))
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
-                return ui.ShowPopup(new ConsumeItemPopupViewModel());
+                if (_core.UserService.User.Id == null)
+                {
+                    await ui.ShowPopup(new RequestServicePopupViewModel());
+                    if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
+                    {
+                        //await userManager.RequestLoginAsync();
+                    }
+                }
+               
+                    //return ui.ShowPopup(new ConsumeItemPopupViewModel());
+                
             }
-            return Task.FromResult(false);
+            return null;
+            //return Task.FromResult(false);
         }
 
-        public Task<bool> ConsumeItemOrRequestServiceAsync(string message, string pluginName, ServerItem item)
-        {
-            return Task.FromResult(false);
-        }
 
-        public Task<bool> ConsumeQuantityAsync(string pluginName, int quantity)
-        {
-            return Task.FromResult(false);
-        }
 
-        public Task<bool> ConsumeQuantityOrRequestServiceAsync(string pluginName, int quantity)
-        {
-            return Task.FromResult(false);
-        }
-
-        public Task<Service> GetServiceForItemAsync(string pluginName, ServerItem item)
+        public Task<Service> GetServiceForQuantityAsync(string text, string pluginName, int quantity)
         {
             return Task.FromResult(default(Service));
         }
 
-        public Task<Service> GetServiceForQuantityAsync(string pluginName)
+        public async Task<Service> GetServiceAsync(string text, string pluginName)
         {
-            return Task.FromResult(default(Service));
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                if (_core.UserService.User.Id == null)
+                {
+                    await ui.ShowPopup(new RequestServicePopupViewModel());
+                    if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
+                    {
+                        //await userManager.RequestLoginAsync();
+                    }
+                }
+
+                //return ui.ShowPopup(new ConsumeItemPopupViewModel());
+
+            }
+            return null;
         }
 
         public bool IsPluginFree(string plugnName)
