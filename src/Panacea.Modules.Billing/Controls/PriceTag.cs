@@ -27,5 +27,18 @@ namespace Panacea.Modules.Billing.Controls
             DependencyProperty.Register("Service", typeof(Service), typeof(PriceTag), new PropertyMetadata(null));
 
 
+
+        public string Symbol
+        {
+            get { return (string)GetValue(SymbolProperty); }
+            set { SetValue(SymbolProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Symbol.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SymbolProperty =
+            DependencyProperty.Register("Symbol", typeof(string), typeof(PriceTag), new PropertyMetadata(""));
+
+
+
     }
 }

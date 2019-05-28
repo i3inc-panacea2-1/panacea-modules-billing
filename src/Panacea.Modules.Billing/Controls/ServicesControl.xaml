@@ -169,40 +169,38 @@
                                                             'Core'}"
                         Visibility="Visible" />
                     <Grid>
-                        <Button Name="CartButton">
-                            <Border Background="DodgerBlue">
-                                <Grid>
-                                    <Path
-                                        Margin="20,10"
-                                        Data="F1 M 76.4326,9.41992L 76.5928,9.44434L 90.7617,0L 94.3613,4.7998L 81.9365,13.082L 72.8594,71.4727C 74.9902,73.1191 76.3613,75.6992 76.3613,78.5996C 76.3613,83.5703 72.332,87.5996 67.3613,87.5996C 63.4434,87.5996 60.1094,85.0947 58.874,81.5996L 33.8496,81.5996C 32.6143,85.0947 29.2803,87.5996 25.3613,87.5996C 20.3906,87.5996 16.3613,83.5703 16.3613,78.5996C 16.3613,73.6289 20.3906,69.5996 25.3613,69.5996C 29.2803,69.5996 32.6143,72.1035 33.8496,75.5996L 58.874,75.5996C 60.0791,72.1885 63.2832,69.7207 67.0781,69.6035L 68.0195,63.542L 11.3564,63.542L 11.3564,63.4814L 10.918,63.5996L 0,23.0449L 5.79492,21.4844L 15.502,57.542L 68.9531,57.542L 76.3975,9.64648L 76.3613,9.59863L 76.4102,9.56641L 76.4326,9.41992 Z M 64.3604,45.6006L 22.3604,45.6006L 22.3604,39.6006L 64.3604,39.6006L 64.3604,45.6006 Z M 64.3613,33.5996L 16.3613,33.5996L 16.3613,27.5996L 64.3613,27.5996L 64.3613,33.5996 Z "
-                                        Fill="White"
-                                        Stretch="Uniform"
-                                        UseLayoutRounding="False" />
-                                    <Border
-                                        Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
-                                        Margin="0,0,-6,1"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom"
-                                        Background="Black"
-                                        CornerRadius="99">
-                                        <TextBlock
-                                            Margin="2,1,1,2"
-                                            VerticalAlignment="Center"
-                                            pcontrols:Material.RelativeFontSizeRatio=".8"
-                                            FontWeight="Bold"
-                                            Foreground="White"
-                                            Text="{Binding SelectedItems.Count}"
-                                            TextAlignment="Center" />
-                                    </Border>
-                                </Grid>
-                            </Border>
+                        <Button
+                            Name="CartButton"
+                            HorizontalContentAlignment="Stretch"
+                            Background="DodgerBlue">
 
+                            <Grid>
+                                <pcontrols:MaterialIcon Foreground="White" Icon="shopping_cart" />
+                                <Border
+                                    Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
+                                    Margin="0,0,6,1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="Black"
+                                    CornerRadius="99">
+                                    <TextBlock
+                                        Margin="2,1,1,2"
+                                        VerticalAlignment="Center"
+                                        pcontrols:Material.RelativeFontSizeRatio=".8"
+                                        FontWeight="Bold"
+                                        Foreground="White"
+                                        Text="{Binding SelectedItems.Count}"
+                                        TextAlignment="Center" />
+                                </Border>
+
+                            </Grid>
                         </Button>
                         <Popup
                             Name="CartBox"
                             MinWidth="370"
                             MaxHeight="450"
                             HorizontalOffset="{Binding ActualWidth, ElementName=CartButton}"
+                            IsOpen="{Binding PopupOpen}"
                             Placement="Left"
                             VerticalOffset="{Binding ActualHeight, ElementName=CartButton}">
 
@@ -248,7 +246,7 @@
                                                                 </Button>
                                                                 <TextBlock
                                                                     Grid.Column="1"
-                                                                    pcontrols:Material.RelativeFontSizeRatio=".9"
+                                                                    pcontrols:Material.RelativeFontSizeRatio="1.2"
                                                                     FontWeight="SemiBold"
                                                                     Text="{Binding Name}"
                                                                     TextWrapping="Wrap" />
@@ -256,7 +254,7 @@
                                                                 <TextBlock
                                                                     Grid.Row="1"
                                                                     Grid.Column="1"
-                                                                    pcontrols:Material.RelativeFontSizeRatio=".9"
+                                                                    pcontrols:Material.RelativeFontSizeRatio="1.0"
                                                                     Text="{Binding DurationInDaysString.Text}"
                                                                     TextWrapping="Wrap"
                                                                     Visibility="{Binding IsPricePerDay, Converter={StaticResource NotBool}}" />
@@ -281,7 +279,7 @@
                                                                     <TextBlock
                                                                         HorizontalAlignment="Right"
                                                                         VerticalAlignment="Center"
-                                                                        pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                                        pcontrols:Material.RelativeFontSizeRatio="1.1"
                                                                         FontWeight="Normal"
                                                                         Foreground="Black"
                                                                         Text="{Binding VisiblePrice, StringFormat=#0.00}"
@@ -396,7 +394,8 @@
                                             Margin="5,3,3,5"
                                             Background="DodgerBlue"
                                             Content="{multilinguality:Translate 'Checkout',
-                                                                                'Core'}" />
+                                                                                'Core'}"
+                                            Foreground="White"/>
                                         <Button
                                             Name="CancelButton"
                                             Margin="5,3,3,5"
@@ -426,10 +425,7 @@
             Margin="2"
             SelectedIndex="{Binding SelectedIndex}">
             <TabItem Name="limitedPackagesTab" Header="Packages">
-                <local:PackageViewer
-                    x:Name="packagesControl"
-                    Packages="{Binding Packages}"
-                    SelectedPackages="{Binding SelectedItems}" />
+                <local:PackageViewer x:Name="packagesControl" Click="packagesLimited_Click" Packages="{Binding Packages}" />
             </TabItem>
             <TabItem Name="limitedServicesTab" Header="Services">
 

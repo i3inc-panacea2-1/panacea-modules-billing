@@ -98,6 +98,99 @@ namespace Panacea.Modules.Billing.Controls
         public ServicesControl()
         {
             InitializeComponent();
+            SelectedItems = new ObservableCollection<Service>();
+        }
+
+        private void packagesLimited_Click(object sender, EventArgs e)
+        {
+            var package = sender as Service;
+
+            if (package == null) return;
+            CancelButton.Visibility = Visibility.Collapsed;
+            CancelButtonServices.Visibility = Visibility.Visible;
+            if (package is Package)
+            {
+                CancelButton.Visibility = Visibility.Visible;
+                CancelButtonServices.Visibility = Visibility.Collapsed;
+                SelectedItems.Clear();
+                Packages.ForEach(lp => lp.IsChecked = false);
+                Services.ForEach(lp => lp.IsChecked = false);
+                package.IsChecked = true;
+            }
+            else if (SelectedItems.Any(i => i is Package))
+            {
+                SelectedItems.Clear();
+                Packages.ForEach(lp => lp.IsChecked = false);
+                Services.ForEach(lp => lp.IsChecked = false);
+                package.IsChecked = true;
+            }
+            if (SelectedItems.Contains(package))
+            {
+                SelectedItems.Remove(package);
+                package.IsChecked = false;
+                CartBox.IsOpen = SelectedItems.Count > 0;
+                HasSelectedPerDay = SelectedItems.All(i => i.IsPricePerDay);
+                UpdateSum();
+                TotalPanel.Visibility = SelectedItems.Any(i => i.IsPricePerDay) || SelectedItems.Count > 1
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+                return;
+            }
+
+
+            if ((package.IsPricePerDay && SelectedItems.Any(s => !s.IsPricePerDay)) ||
+                (!package.IsPricePerDay && SelectedItems.Any(s => s.IsPricePerDay)))
+            {
+
+                //var warning = new ChangeServiceTypeWarning();
+                //warning.Continue += (oo, ee) =>
+                //{
+                //    window.ThemeManager.HidePopup(warning);
+                //    SelectedItems.Clear();
+                //    packages.ForEach(lp => lp.IsChecked = false);
+                //    services.ForEach(lp => lp.IsChecked = false);
+                //    package.IsChecked = true;
+                //    SelectedItems.Add(package);
+                //    CartBox.IsOpen = SelectedItems.Count > 0;
+                //    HasSelectedPerDay = SelectedItems.All(i => i.IsPricePerDay);
+                //    UpdateSum();
+                //    TotalPanel.Visibility = SelectedItems.Any(i => i.IsPricePerDay) || SelectedItems.Count > 1
+                //        ? Visibility.Visible
+                //        : Visibility.Collapsed;
+                //};
+
+                //warning.Cancel += (oo, ee) =>
+                //{
+                //    window.ThemeManager.HidePopup(warning);
+                //    package.IsChecked = false;
+                //    CartBox.IsOpen = SelectedItems.Count > 0;
+                //};
+                CartBox.IsOpen = false;
+
+                //window.ThemeManager.ShowPopup(warning).Closed += (oo, ee) =>
+                //{
+                //    package.IsChecked = false;
+                //};
+
+
+            }
+            else
+            {
+
+                SelectedItems.Add(package);
+                CartBox.IsOpen = SelectedItems.Count > 0;
+                HasSelectedPerDay = SelectedItems.All(i => i.IsPricePerDay);
+                UpdateSum();
+                TotalPanel.Visibility = SelectedItems.Any(i => i.IsPricePerDay) || SelectedItems.Count > 1
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+        }
+
+        void UpdateSum()
+        {
+            if (SelectedItems == null) return;
+            Sum = SelectedItems.All(i => i.IsPricePerDay) ? SelectedItems.Sum(i => i.TotalPrice * DaysSlider.Value) : SelectedItems.Sum(s => s.TotalPrice);
         }
     }
 }

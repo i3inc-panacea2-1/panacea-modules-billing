@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,8 +26,8 @@ namespace Panacea.Modules.Billing.Controls
     public partial class PackageViewer : UserControl
     {
         public static readonly DependencyProperty PackagesProperty =
-            DependencyProperty.Register("Packages", typeof(List<Package>),
-            typeof(PackageViewer), new FrameworkPropertyMetadata(null));
+             DependencyProperty.Register("Packages", typeof(List<Package>),
+             typeof(PackageViewer), new FrameworkPropertyMetadata(null));
 
         // .NET Property wrapper
         public List<Package> Packages
@@ -33,33 +36,93 @@ namespace Panacea.Modules.Billing.Controls
             set { SetValue(PackagesProperty, value); }
         }
 
+        public static readonly DependencyProperty CultureProperty = DependencyProperty.Register(
+            "Culture", typeof(CultureInfo), typeof(PackageViewer), new PropertyMetadata(default(CultureInfo)));
 
-        public ObservableCollection<Package> SelectedPackages
+        public CultureInfo Culture
         {
-            get { return (ObservableCollection<Package>)GetValue(SelectedPackagesProperty); }
-            set { SetValue(SelectedPackagesProperty, value); }
+            get { return (CultureInfo)GetValue(CultureProperty); }
+            set { SetValue(CultureProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for SelectedPackages.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectedPackagesProperty =
-            DependencyProperty.Register("SelectedPackages", typeof(ObservableCollection<Package>), typeof(PackageViewer), new PropertyMetadata(null));
 
 
+        public List<Package> DemoPackages
+        {
+            get
+            {
+                return new List<Package>()
+                {
+                    new Package()
+                    {
+                        Name = "asdf asdfsdfsd fasdf",
+                        Description =
+                            "dfsgfj ggjidfasj gfgihj asdopghfasdoighsdfugh puio aghfuighaui hguiagh hgahfughaufgh uaigh fuagh afuhg auohg ufasdhguh puahdfgufh",
+                        TotalPrice = 76,
+                        Services = new List<ServicePriority>()
+                        {
+                            new ServicePriority()
+                            {
+                                Service = new Service()
+                                {
+                                    Name = "ASDfdsfsdfsd",
+                                    Description =
+                                        "iofjaisdj sdjafia sjifjsdioafhuifhusdhaupshad uashd fusdhf usdha fuhfu ashf uashfusdhaf sudfh asufh su8fh dsu8fh df",
+                                        TotalPrice = 50
+                                }
+                            }
+                        }
+                    },
+                    new Package()
+                    {
+                        Name = "asdf asdfsdfsd fasdf",
+                        Description =
+                            "dfsgfj ggjidfasj gfgihj asdopghfasdoighsdfugh puio aghfuighaui hguiagh hgahfughaufgh uaigh fuagh afuhg auohg ufasdhguh puahdfgufh",
+                        TotalPrice = 76,
+                        Services = new List<ServicePriority>()
+                        {
+                            new ServicePriority()
+                            {
+                                Service = new Service()
+                                {
+                                    Name = "ASDfdsfsdfsd",
+                                    Description =
+                                        "iofjaisdj sdjafia sjifjsdioafhuifhusdhaupshad uashd fusdhf usdha fuhfu ashf uashfusdhaf sudfh asufh su8fh dsu8fh df",
+                                        TotalPrice = 50
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+            set
+            {
+
+            }
+        }
 
         public PackageViewer()
         {
             InitializeComponent();
-            SelectedPackages = new ObservableCollection<Package>();
+
+            if (DesignerProperties.GetIsInDesignMode(this))
+            {
+                Packages = DemoPackages;
+            }
+            Culture = Thread.CurrentThread.CurrentUICulture;
         }
 
-        private void ItemsControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SelectedPackages.Clear();
-            foreach (var item in (sender as ListBox).SelectedItems)
-            {
-                SelectedPackages.Add(item as Package);
+        public event EventHandler Click;
 
-            }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            object package = null;
+            var el = sender as FrameworkElement;
+            package = el.Tag;
+            if (!(package as Service).IsMore)
+                (package as Package).IsChecked = !(package as Package).IsChecked;
+            Click?.Invoke(package, EventArgs.Empty);
         }
     }
 }
