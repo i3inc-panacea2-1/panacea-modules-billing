@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -17,19 +16,13 @@ using System.Windows.Shapes;
 namespace Panacea.Modules.Billing.Views
 {
     /// <summary>
-    /// Interaction logic for ServiceWizard.xaml
+    /// Interaction logic for NoServiceSelectedPopup.xaml
     /// </summary>
-    public partial class ServiceWizard : UserControl
+    public partial class NoServiceSelectedPopup : UserControl
     {
-        public ServiceWizard()
+        public NoServiceSelectedPopup()
         {
             InitializeComponent();
-            //webBrowser
-        }
-
-        ~ServiceWizard()
-        {
-
         }
     }
 }

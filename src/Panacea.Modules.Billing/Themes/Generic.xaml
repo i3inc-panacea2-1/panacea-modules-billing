@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Panacea.Modules.Billing.Controls"
-    xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality">
+    xmlns:multilinguality="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
+    xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls">
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <Style TargetType="{x:Type local:PaginatingItemsControl}">
         <Style.Setters>
@@ -96,27 +97,25 @@
                                             Orientation="Horizontal">
                                             <TextBlock
                                                 VerticalAlignment="Top"
-                                                FontSize="{DynamicResource FontSize-X-Small}"
+                                                pcontrols:Material.RelativeFontSizeRatio="0.9"
                                                 Foreground="{TemplateBinding Background}"
-                                                LineHeight="{DynamicResource FontSize-X-Small}"
                                                 LineStackingStrategy="BlockLineHeight"
                                                 Text="$" />
 
                                             <TextBlock
                                                 VerticalAlignment="Center"
-                                                FontSize="{DynamicResource FontSize-Xx-Large}"
+                                                pcontrols:Material.RelativeFontSizeRatio="1.4"
                                                 FontWeight="Bold"
                                                 Foreground="{TemplateBinding Background}"
-                                                LineHeight="{DynamicResource FontSize-Xx-Large}"
                                                 LineStackingStrategy="BlockLineHeight"
                                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Service.VisiblePricePart, StringFormat=#0}" />
                                             <TextBlock
                                                 Margin="0,0,0,1"
                                                 VerticalAlignment="Bottom"
-                                                FontSize="{DynamicResource FontSize-X-Small}"
+                                               pcontrols:Material.RelativeFontSizeRatio="0.9"
                                                 FontWeight="SemiBold"
                                                 Foreground="{TemplateBinding Background}"
-                                                LineHeight="{DynamicResource FontSize-Xx-Large}"
+                                                
                                                 LineStackingStrategy="BlockLineHeight"
                                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Service.VisiblePriceDecimalPart}" />
                                         </StackPanel>
@@ -124,10 +123,9 @@
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Top"
-                                            FontSize="{DynamicResource FontSize-X-Small}"
+                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
                                             FontWeight="Normal"
                                             Foreground="{TemplateBinding Background}"
-                                            LineHeight="{DynamicResource FontSize-X-Small}"
                                             LineStackingStrategy="BlockLineHeight"
                                             Text="{multilinguality:Translate 'per day',
                                                                              'Core'}"

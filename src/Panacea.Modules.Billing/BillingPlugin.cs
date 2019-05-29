@@ -12,7 +12,7 @@ namespace Panacea.Modules.Billing
     public class BillingPlugin : IBillingPlugin
     {
         private readonly PanaceaServices _core;
-
+        BillingManager _manager;
         public BillingPlugin(PanaceaServices core)
         {
             _core = core;
@@ -43,14 +43,14 @@ namespace Panacea.Modules.Billing
         #region ICallable
         public void Call()
         {
-            
+
         }
         #endregion
 
 
         public IBillingManager GetBillingManager()
         {
-            return new BillingManager(_core);
+            return _manager = _manager ?? new BillingManager(_core);
         }
     }
 }

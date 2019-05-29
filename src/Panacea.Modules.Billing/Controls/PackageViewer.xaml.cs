@@ -1,4 +1,5 @@
-﻿using Panacea.Modularity.Billing;
+﻿using Panacea.Controls;
+using Panacea.Modularity.Billing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -110,19 +111,26 @@ namespace Panacea.Modules.Billing.Controls
                 Packages = DemoPackages;
             }
             Culture = Thread.CurrentThread.CurrentUICulture;
+
+            
         }
 
-        public event EventHandler Click;
+
+
+        public ICommand SelectCommand
+        {
+            get { return (ICommand)GetValue(SelectCommandProperty); }
+            set { SetValue(SelectCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectCommandProperty =
+            DependencyProperty.Register("SelectCommand", typeof(ICommand), typeof(PackageViewer), new PropertyMetadata(null));
 
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            object package = null;
-            var el = sender as FrameworkElement;
-            package = el.Tag;
-            if (!(package as Service).IsMore)
-                (package as Package).IsChecked = !(package as Package).IsChecked;
-            Click?.Invoke(package, EventArgs.Empty);
+            SelectCommand?.Execute((sender as FrameworkElement).Tag);
         }
     }
 }
