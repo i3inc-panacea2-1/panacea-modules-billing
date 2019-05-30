@@ -58,33 +58,29 @@ namespace Panacea.Modules.Billing
             {
                 if (_core.UserService.User.Id == null)
                 {
-
                     var res = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
                     if (res == RequestServiceResult.SignIn && _core.TryGetUserAccountManager(out IUserAccountManager userManager))
                     {
                         if (!await userManager.LoginAsync()) return null;
-                        var service = await GetServiceAsync(pluginName);
-                        if (service != null) return service;
+
 
                     }
-                    else if (res == RequestServiceResult.BuyService && await ShowBuyServiceWizard())
+                    else if (res == RequestServiceResult.None)
                     {
-                        var service = await GetServiceAsync(pluginName);
-                        if (service != null) return service;
+                        return null;
                     }
                 }
-                else
+
+                var service = await GetServiceAsync(pluginName);
+                if (service != null) return service;
+                var res2 = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
+                if (res2 == RequestServiceResult.BuyService && await ShowBuyServiceWizard())
                 {
-                    var service = await GetServiceAsync(pluginName);
+                    service = await GetServiceAsync(pluginName);
                     if (service != null) return service;
-                    var res = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
-                    if (res == RequestServiceResult.BuyService && await ShowBuyServiceWizard())
-                    {
-                        service = await GetServiceAsync(pluginName);
-                        if (service != null) return service;
 
-                    }
                 }
+
             }
             return null;
         }
@@ -92,61 +88,51 @@ namespace Panacea.Modules.Billing
         internal async Task<Service> GetServiceAsync(string pluginName)
         {
             await GetUserServicesAsync();
-
-            bool unlimited(Service s) => s.Quantity == -1;
-
-            bool limitedPerDay(Service s) => s.IsQuantityPerDay && s.ServiceHistory != null &&
-                     s.ServiceHistory.Count(h => h.Timestamp.Date == DateTime.Now.Date) < s.Quantity;
-
-            bool limited(Service s) => s.Quantity > 0 && !s.IsQuantityPerDay;
-
-
-            var pluginServices = GetPluginServices(pluginName);
+            var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
-
                 pluginServices = pluginServices.OrderBy(s => s.Duration).ThenBy(x => x.RestDuration).ToList();
-
                 if (pluginServices.Any(s => s.Duration != -1))
                 {
                     var limitedServices = pluginServices.Where(s => s.Duration != -1).ToList();
-                    if (limitedServices.Any(unlimited))
-                    {
-                        return
-                            limitedServices.First(unlimited);
-                    }
-
-                    if (limitedServices.Any(limitedPerDay))
-                    {
-                        return
-                            limitedServices.First(limitedPerDay);
-                    }
-                    if (limitedServices.Any(limited))
-                    {
-                        return
-                            limitedServices.First(limited);
-                    }
+                    var service = FilterServices(limitedServices);
+                    if (service != null) return service;
                 }
+            
                 pluginServices = pluginServices.Where(s => s.Duration == -1).ToList();
-                if (pluginServices.Any(unlimited))
-                {
-                    return
-                        pluginServices.First(unlimited);
-                }
-
-                if (pluginServices.Any(limitedPerDay))
-                {
-                    return
-                        pluginServices.First(limitedPerDay);
-                }
-                if (pluginServices.Any(limited))
-                {
-                    return
-                        pluginServices.First(limited);
-                }
+                var serv = FilterServices(pluginServices);
+                if (serv != null) return serv;
             }
             return null;
         }
+
+        internal Service FilterServices(List<Service> services)
+        {
+            var unlimitedService = services.FirstOrDefault(HasUnlimitedService);
+            if (unlimitedService != null)
+            {
+                return unlimitedService;
+            }
+            var limitedPerDay = services.FirstOrDefault(HasLimitedPerDayService);
+            if (limitedPerDay != null)
+            {
+                return limitedPerDay;
+            }
+            var limited = services.FirstOrDefault(HasLimitedService);
+            if (limited != null)
+            {
+                return limited;
+            }
+            return null;
+        }
+
+        internal bool HasUnlimitedService(Service s) => s.Quantity == -1;
+
+        internal bool HasLimitedPerDayService(Service s) => s.IsQuantityPerDay && s.ServiceHistory != null &&
+                    s.ServiceHistory.Count(h => h.Timestamp.Date == DateTime.Now.Date) < s.Quantity;
+
+        internal bool HasLimitedService(Service s) => s.Quantity > 0 && !s.IsQuantityPerDay;
+
 
         internal async Task<bool> ShowBuyServiceWizard()
         {
@@ -161,7 +147,7 @@ namespace Panacea.Modules.Billing
             return false;
         }
 
-        protected List<Service> GetPluginServices(string pluginName)
+        protected List<Service> GetPluginActiveServices(string pluginName)
         {
             if (_services == null) return null;
             if (_services.All(s => s.Plugin != pluginName)) return null;

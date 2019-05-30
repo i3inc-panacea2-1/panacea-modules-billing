@@ -24,7 +24,7 @@ namespace Panacea.Modules.Billing.ViewModels
     {
         private readonly PanaceaServices _core;
         private readonly TaskCompletionSource<bool> _source;
-
+        bool _waitingForAnotherTask = false;
         public ServiceWizardViewModel(PanaceaServices core, TaskCompletionSource<bool> source)
         {
             _core = core;
@@ -53,8 +53,10 @@ namespace Panacea.Modules.Billing.ViewModels
                     {
                         if (core.TryGetUserAccountManager(out IUserAccountManager account))
                         {
+                            _waitingForAnotherTask = true;
                             if (await account.RequestLoginAsync("In order to continue, you need to sign in with your user account"))
                             {
+                                _waitingForAnotherTask = false;
                                 TabsSelectedIndex = 1;
                                 CreateWebBrowser();
                                 BuyService();
@@ -456,7 +458,9 @@ namespace Panacea.Modules.Billing.ViewModels
             }
            
             _host?.Dispose();
-            _source.TrySetResult(false);
+            if(!_waitingForAnotherTask)
+                _source.TrySetResult(false);
+                
         }
 
         System.Windows.Forms.WebBrowser _webBrowser;
