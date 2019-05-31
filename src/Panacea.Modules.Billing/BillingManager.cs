@@ -62,8 +62,14 @@ namespace Panacea.Modules.Billing
                     if (res == RequestServiceResult.SignIn && _core.TryGetUserAccountManager(out IUserAccountManager userManager))
                     {
                         if (!await userManager.LoginAsync()) return null;
-
-
+                    }
+                    else if(res == RequestServiceResult.BuyService)
+                    {
+                        if(await ShowBuyServiceWizard())
+                        {
+                            var service2 = await GetServiceAsync(pluginName);
+                            return service2;
+                        }
                     }
                     else if (res == RequestServiceResult.None)
                     {
@@ -78,7 +84,6 @@ namespace Panacea.Modules.Billing
                 {
                     service = await GetServiceAsync(pluginName);
                     if (service != null) return service;
-
                 }
 
             }
