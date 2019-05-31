@@ -28,21 +28,36 @@ namespace Panacea.Modules.Billing
             {
                 if (_core.UserService.User.Id == null)
                 {
-                    await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
-                    if (_core.TryGetUserAccountManager(out IUserAccountManager userManager))
+                    var res = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
+                    if (res == RequestServiceResult.SignIn && _core.TryGetUserAccountManager(out IUserAccountManager userManager))
                     {
-                        if (await userManager.LoginAsync())
+                        if (!await userManager.LoginAsync()) return null;
+                    }
+                    else if (res == RequestServiceResult.BuyService)
+                    {
+                        if (await ShowBuyServiceWizard())
                         {
-
+                            var service2 = await GetServiceAsync(pluginName);
+                            return service2;
                         }
+                    }
+                    else if (res == RequestServiceResult.None)
+                    {
+                        return null;
                     }
                 }
 
-                //return ui.ShowPopup(new ConsumeItemPopupViewModel());
+                var service = await GetServiceForItemAsync(pluginName, item);
+                if (service != null) return service;
+                var res2 = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
+                if (res2 == RequestServiceResult.BuyService && await ShowBuyServiceWizard())
+                {
+                    service = await GetServiceForItemAsync(pluginName, item);
+                    if (service != null) return service;
+                }
 
             }
             return null;
-            //return Task.FromResult(false);
         }
 
 
@@ -103,10 +118,61 @@ namespace Panacea.Modules.Billing
                     var service = FilterServices(limitedServices);
                     if (service != null) return service;
                 }
-            
+
                 pluginServices = pluginServices.Where(s => s.Duration == -1).ToList();
                 var serv = FilterServices(pluginServices);
                 if (serv != null) return serv;
+            }
+            return null;
+        }
+
+        internal async Task<Service> GetServiceForItemAsync(string pluginName, ServerItem item)
+        {
+            await GetUserServicesAsync();
+            var pluginServices = GetPluginActiveServices(pluginName);
+            if (pluginServices != null)
+            {
+                pluginServices = pluginServices.OrderBy(s => s.Duration).ThenBy(x => x.RestDuration).ToList();
+                if (pluginServices.Any(s => s.Duration != -1))
+                {
+                    var limitedServices = pluginServices.Where(s => s.Duration != -1).ToList();
+                    var service = FilterServicesForItem(limitedServices, item);
+                    if (service != null) return service;
+                }
+
+                pluginServices = pluginServices.Where(s => s.Duration == -1).ToList();
+                var serv = FilterServicesForItem(pluginServices, item);
+                if (serv != null) return serv;
+            }
+            return null;
+        }
+
+        internal Service FilterServicesForItem(List<Service> services, ServerItem item)
+        {
+            var alreadyBought = services.FirstOrDefault(s => AlreadyBoughtItem(s, item));
+            if (alreadyBought != null)
+            {
+                return alreadyBought;
+            }
+            var itemInCategory = services.FirstOrDefault(s => ItemInCategory(s, item));
+            if (itemInCategory != null)
+            {
+                return itemInCategory;
+            }
+            var unlimitedService = services.FirstOrDefault(HasUnlimitedService);
+            if (unlimitedService != null)
+            {
+                return unlimitedService;
+            }
+            var limitedPerDay = services.FirstOrDefault(HasLimitedPerDayService);
+            if (limitedPerDay != null)
+            {
+                return limitedPerDay;
+            }
+            var limited = services.FirstOrDefault(HasLimitedService);
+            if (limited != null)
+            {
+                return limited;
             }
             return null;
         }
@@ -130,6 +196,14 @@ namespace Panacea.Modules.Billing
             }
             return null;
         }
+
+        internal bool AlreadyBoughtItem(Service s, ServerItem item) => s.ServiceHistory != null && s.ServiceHistory.Any(sh => sh.Item == item.Id);
+
+        internal bool ItemInCategory(Service s, ServerItem item) =>
+            s.Categories == null 
+            || s.Categories.Count == 0 
+            || (item.Categories != null && s.Categories.Any(c => item.Categories.Contains(c))) 
+            || s.Items == null || s.Items.Count == 0 || s.Items.Contains(item.Id);
 
         internal bool HasUnlimitedService(Service s) => s.Quantity == -1;
 
