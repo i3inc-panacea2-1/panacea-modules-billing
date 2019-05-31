@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Panacea.Modules.Billing.Models;
 
 namespace Panacea.Modules.Billing
 {
@@ -60,8 +61,6 @@ namespace Panacea.Modules.Billing
             return null;
         }
 
-
-
         public Task<Service> GetServiceForQuantityAsync(string text, string pluginName, int quantity)
         {
             return Task.FromResult(default(Service));
@@ -107,7 +106,7 @@ namespace Panacea.Modules.Billing
 
         internal async Task<Service> GetServiceAsync(string pluginName)
         {
-            await GetUserServicesAsync();
+            await UpdateUserServicesAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -128,7 +127,7 @@ namespace Panacea.Modules.Billing
 
         internal async Task<Service> GetServiceForItemAsync(string pluginName, ServerItem item)
         {
-            await GetUserServicesAsync();
+            await UpdateUserServicesAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -218,9 +217,11 @@ namespace Panacea.Modules.Billing
             if (_core.TryGetUiManager(out IUiManager ui))
             {
                 var source = new TaskCompletionSource<bool>();
-                ui.Navigate(new ServiceWizardViewModel(_core, source));
+                var vm = new ServiceWizardViewModel(_core, source);
+                ui.Navigate(vm);
                 var res = await source.Task;
-                ui.GoBack();
+                if(ui.CurrentPage == vm)
+                    ui.GoBack();
                 return res;
             }
             return false;
@@ -242,16 +243,11 @@ namespace Panacea.Modules.Billing
             return false;
         }
 
-        protected Task GetUserServicesAsync()
+        protected Task UpdateUserServicesAsync()
         {
             return DoWhileBusy(async () =>
             {
-                var servicesResponse =
-                await _core.HttpClient.GetObjectAsync<List<Service>>("billing/get_user_services/", allowCache: false);
-                if (servicesResponse.Success)
-                {
-                    _services = servicesResponse.Result;
-                }
+                await GetActiveUserServicesAsync();
             });
 
         }
@@ -278,6 +274,61 @@ namespace Panacea.Modules.Billing
             {
                 return act();
             }
+        }
+
+        IBillingSettings _settings;
+        public async Task<IBillingSettings> GetSettingsAsync()
+        {
+            if (_settings != null) return _settings;
+            var resp = await _core.HttpClient.GetObjectAsync<GetCurrencySettingsResponse>("billing/get_currency_settings/");
+            if (resp.Success)
+            {
+                _settings = resp.Result;
+                return _settings;
+            }
+            throw new Exception(resp.Error);
+        }
+
+        public async Task<List<Service>> GetActiveUserServicesAsync()
+        {
+            var servicesResponse = await _core.HttpClient.GetObjectAsync<List<Service>>("billing/get_user_services/", allowCache: false);
+            if (servicesResponse.Success)
+            {
+                _services = servicesResponse.Result;
+            }
+            if (_services == null) return null;
+            //find services for the specified plugin
+            var services = _services.Where(s =>s.RestDuration > 0 || s.Duration == -1.0).ToList();
+            return services;
+        }
+
+        public async Task<List<Ledger>> GetUserPurchaseHistoryAsync()
+        {
+            var response = await _core.HttpClient.GetObjectAsync<List<Ledger>>("billing/get_payment_history/");
+            if (response.Success)
+            {
+                var ret = response.Result;
+                foreach (var a in ret)
+                {
+                    if (a.PackageItem == null)
+                    {
+                        a.PackageItem = new Package()
+                        {
+                            Name = string.Join(", ", a.Services.Select(s => s.Name).ToList())
+                        };
+                    }
+                }
+                return ret.OrderByDescending(a => a.Timestamp).ToList();
+            }
+            else
+            {
+                throw new Exception(response.Error);
+            }
+        }
+
+        public async void NavigateToBuyServiceWizard()
+        {
+            await ShowBuyServiceWizard();
         }
     }
 }
