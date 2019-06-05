@@ -531,7 +531,7 @@ namespace Panacea.Modules.Billing.ViewModels
 
         }
 
-        protected async void BuyService()
+        protected void BuyService()
         {
             if (_webBrowser.IsDisposed) return;
 
@@ -544,7 +544,7 @@ namespace Panacea.Modules.Billing.ViewModels
 
             if (package != null)
             {
-                url = await _core.HttpClient.GetApiEndpoint("billing/buy_package/");
+                url = _core.HttpClient.GetApiEndpoint("billing/buy_package/");
                 if (package.IsPricePerDay)
                 {
                     var duration = DaysSliderValue;
@@ -563,7 +563,7 @@ namespace Panacea.Modules.Billing.ViewModels
             }
             else
             {
-                url = await _core.HttpClient.GetApiEndpoint("billing/buy_services/");
+                url = _core.HttpClient.GetApiEndpoint("billing/buy_services/");
                 if (services[0].IsPricePerDay)
                 {
                     var duration = DaysSliderValue;
@@ -580,7 +580,7 @@ namespace Panacea.Modules.Billing.ViewModels
                 else
                 {
                     postData =
-                        String.Format(
+                        string.Format(
                             "user={0}&amountWithTaxes={1}&transactionType=purchase&method=cash",
                             _core.UserService.User.Id,
                             services.Sum(s => s.TotalPrice).ToString("#0.00", culture));
