@@ -17,10 +17,12 @@ namespace Panacea.Modules.Billing
     {
         private readonly PanaceaServices _core;
         private List<Service> _services;
+        IBillingSettings _settings;
 
         public BillingManager(PanaceaServices core)
         {
             _core = core;
+           
         }
 
         public async Task<Service> GetServiceForItemAsync(string text, string pluginName, ServerItem item)
@@ -106,7 +108,7 @@ namespace Panacea.Modules.Billing
 
         internal async Task<Service> GetServiceAsync(string pluginName)
         {
-            await UpdateUserServicesAsync();
+            await UpdateUserServicesWithUiAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -127,7 +129,7 @@ namespace Panacea.Modules.Billing
 
         internal async Task<Service> GetServiceForItemAsync(string pluginName, ServerItem item)
         {
-            await UpdateUserServicesAsync();
+            await UpdateUserServicesWithUiAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -243,25 +245,13 @@ namespace Panacea.Modules.Billing
             return false;
         }
 
-        protected Task UpdateUserServicesAsync()
+        protected Task UpdateUserServicesWithUiAsync()
         {
             return DoWhileBusy(async () =>
             {
                 await GetActiveUserServicesAsync();
             });
 
-        }
-
-        private Task<T> DoWhileBusy<T>(Func<Task<T>> act)
-        {
-            if (_core.TryGetUiManager(out IUiManager ui))
-            {
-                return ui.DoWhileBusy(act);
-            }
-            else
-            {
-                return act();
-            }
         }
 
         private Task DoWhileBusy(Func<Task> act)
@@ -276,7 +266,7 @@ namespace Panacea.Modules.Billing
             }
         }
 
-        IBillingSettings _settings;
+        
         public async Task<IBillingSettings> GetSettingsAsync()
         {
             if (_settings != null) return _settings;
@@ -291,15 +281,24 @@ namespace Panacea.Modules.Billing
 
         public async Task<List<Service>> GetActiveUserServicesAsync()
         {
-            var servicesResponse = await _core.HttpClient.GetObjectAsync<List<Service>>("billing/get_user_services/", allowCache: false);
-            if (servicesResponse.Success)
+            if (_core.UserService.User.Id != null)
             {
-                _services = servicesResponse.Result;
+                var servicesResponse = await _core.HttpClient.GetObjectAsync<List<Service>>("billing/get_user_services/", allowCache: false);
+                if (servicesResponse.Success)
+                {
+                    _services = servicesResponse.Result;
+                }
+                if (_services == null) return null;
+                //find services for the specified plugin
+                var services = _services.Where(s => s.RestDuration > 0 || s.Duration == -1.0).ToList();
+                return services;
             }
-            if (_services == null) return null;
-            //find services for the specified plugin
-            var services = _services.Where(s =>s.RestDuration > 0 || s.Duration == -1.0).ToList();
-            return services;
+            else
+            {
+                _services = new List<Service>();
+                return new List<Service>();
+            }
+            
         }
 
         public async Task<List<Ledger>> GetUserPurchaseHistoryAsync()
@@ -329,6 +328,11 @@ namespace Panacea.Modules.Billing
         public async void NavigateToBuyServiceWizard()
         {
             await ShowBuyServiceWizard();
+        }
+
+        public List<Service> GetActiveUserServicesSilently()
+        {
+            return _services.Where(s => s.RestDuration > 0 || s.Duration == -1.0).ToList();
         }
     }
 }

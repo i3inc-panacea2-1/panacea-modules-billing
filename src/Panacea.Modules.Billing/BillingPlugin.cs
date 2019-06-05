@@ -21,6 +21,8 @@ namespace Panacea.Modules.Billing
         #region IPlugin
         public Task BeginInit()
         {
+            _core.UserService.UserLoggedIn += UserService_UserLoggedIn;
+            _core.UserService.UserLoggedOut += UserService_UserLoggedOut;
             return Task.CompletedTask;
         }
 
@@ -51,6 +53,18 @@ namespace Panacea.Modules.Billing
         public IBillingManager GetBillingManager()
         {
             return _manager = _manager ?? new BillingManager(_core);
+        }
+
+        private async Task UserService_UserLoggedOut(IUser user)
+        {
+            var man = GetBillingManager() as BillingManager;
+            await man.GetActiveUserServicesAsync();
+        }
+
+        private async Task UserService_UserLoggedIn(IUser user)
+        {
+            var man = GetBillingManager() as BillingManager;
+            await man.GetActiveUserServicesAsync();
         }
     }
 }
