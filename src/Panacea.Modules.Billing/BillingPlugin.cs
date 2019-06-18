@@ -1,6 +1,7 @@
 ﻿using Panacea.Core;
 using Panacea.Models;
 using Panacea.Modularity.Billing;
+using Panacea.Modules.Billing.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Panacea.Modules.Billing
     {
         private readonly PanaceaServices _core;
         BillingManager _manager;
+        List<string> _freePlugins;
         public BillingPlugin(PanaceaServices core)
         {
             _core = core;
@@ -26,9 +28,17 @@ namespace Panacea.Modules.Billing
             return Task.CompletedTask;
         }
 
-        public Task EndInit()
+        public async Task EndInit()
         {
-            return Task.CompletedTask;
+            var res = await _core.HttpClient.GetObjectAsync<GetFreePluginsResponse>("get_versions/", allowCache: false);
+            if (res.Success)
+            {
+                _freePlugins = res.Result.FreePlugins;
+            }
+            else
+            {
+                throw new Exception(res.Error);
+            }
         }
 
         public Task Shutdown()
@@ -52,7 +62,7 @@ namespace Panacea.Modules.Billing
 
         public IBillingManager GetBillingManager()
         {
-            return _manager = _manager ?? new BillingManager(_core);
+            return _manager = _manager ?? new BillingManager(_core, _freePlugins);
         }
 
         private async Task UserService_UserLoggedOut(IUser user)
