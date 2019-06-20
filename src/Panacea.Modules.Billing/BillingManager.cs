@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Panacea.Modules.Billing.Models;
+using Panacea.Multilinguality;
 
 namespace Panacea.Modules.Billing
 {
@@ -50,13 +51,20 @@ namespace Panacea.Modules.Billing
                         return null;
                     }
                 }
-
-                var service = await GetServiceForItemAsync(pluginName, item);
+                var service = await DoWhileBusy(async () =>
+                {
+                    var service3 = await GetServiceForItemAsync(pluginName, item);
+                    return service3;
+                });
                 if (service != null) return service;
                 var res2 = await ui.ShowPopup(new RequestServicePopupViewModel(_core.UserService.User, text));
                 if (res2 == RequestServiceResult.BuyService && await ShowBuyServiceWizard())
                 {
-                    service = await GetServiceForItemAsync(pluginName, item);
+                    service = await DoWhileBusy(async () =>
+                    {
+                        var service3 = await GetServiceForItemAsync(pluginName, item);
+                        return service3;
+                    });
                     if (service != null) return service;
                 }
 
@@ -68,7 +76,7 @@ namespace Panacea.Modules.Billing
         {
             if (_core.UserService.User.Id == null) return null;
 
-            await UpdateUserServicesWithUiAsync();
+            await GetActiveUserServicesAsync();
 
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices == null) return null;
@@ -132,7 +140,7 @@ namespace Panacea.Modules.Billing
         public async Task<Service> GetServiceAsync(string pluginName)
         {
             if (_core.UserService.User.Id == null) return null;
-            await UpdateUserServicesWithUiAsync();
+            await GetActiveUserServicesAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -154,7 +162,7 @@ namespace Panacea.Modules.Billing
         public async Task<Service> GetServiceForItemAsync(string pluginName, ServerItem item)
         {
             if (_core.UserService.User.Id == null) return null;
-            await UpdateUserServicesWithUiAsync();
+            await GetActiveUserServicesAsync();
             var pluginServices = GetPluginActiveServices(pluginName);
             if (pluginServices != null)
             {
@@ -265,6 +273,124 @@ namespace Panacea.Modules.Billing
         }
 
 
+        ConsumeItemPopupViewModel _consumeItemPopup;
+        public async Task<bool> RequestServiceAndConsumeItemAsync(string text, string pluginName, ServerItem item)
+        {
+            if (IsPluginFree(pluginName))
+            {
+                return true;
+            }
+            if (_core.UserService.User.Id == null)
+            {
+                if (await GetOrRequestServiceForItemAsync(text, pluginName, item) != null)
+                {
+                    return await RequestServiceAndConsumeItemAsync(text, pluginName, item);
+                }
+                return false;
+            }
+            try
+            {
+                var s = await GetServiceForItemAsync(pluginName, item);
+                if (s != null)
+                {
+                    if (s.Quantity == -1 || s.ServiceHistory.Any(c => c.Item == item.Id))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        if (_core.TryGetUiManager(out IUiManager ui))
+                        {
+                            ui.HidePopup(_consumeItemPopup);
+                            _consumeItemPopup = new ConsumeItemPopupViewModel(item, s);
+
+                            if (await ui.ShowPopup(_consumeItemPopup, null, PopupType.Information))
+                            {
+                                return await ConsumeItemAsync(pluginName, item);
+                            }
+                        }
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (await GetOrRequestServiceForItemAsync(text, pluginName, item) != null)
+                    {
+                        return await RequestServiceAndConsumeItemAsync(text, pluginName, item);
+                    }
+                    return false;
+                }
+            }
+            catch
+            {
+                new Translator("Billing").Translate(
+                    "Unable to access service information due to network issues. Please try again later.");
+                return false;
+            }
+        }
+
+        public async Task<bool> ConsumeQuantityAsync(string pluginName, int quantity)
+        {
+            return await DoWhileBusy(async () =>
+            {
+                try
+                {
+                    var s = await GetServiceForQuantityAsync(pluginName);
+                    if (s != null)
+                    {
+                        if (s.Quantity > 0)
+                        {
+                            var response = await _core.HttpClient.GetObjectAsync<object>(
+                                "billing/update_user_service/",
+                                postData: new List<KeyValuePair<string, string>>()
+                                {
+                                    new KeyValuePair<string, string>("quantity", quantity.ToString()),
+                                    new KeyValuePair<string, string>("serviceID", s.Id),
+                                    new KeyValuePair<string, string>("itemID", "")
+                                }
+                            );
+                            return response.Success;
+                        }
+                        return s.Quantity == -1;
+                    }
+                }
+                catch
+                {
+
+                }
+                return false;
+            });
+
+        }
+
+        public async Task<bool> ConsumeItemAsync(string pluginName, ServerItem item)
+        {
+            return await DoWhileBusy(async () =>
+            {
+                try
+                {
+                    var s = await GetServiceForItemAsync(pluginName, item);
+                    if (s == null) return false;
+
+                    var response = await _core.HttpClient.GetObjectAsync<object>(
+                        "billing/update_user_service/",
+                        postData: new List<KeyValuePair<string, string>>()
+                        {
+                                    new KeyValuePair<string, string>("quantity", "1"),
+                                    new KeyValuePair<string, string>("serviceID", s.Id),
+                                    new KeyValuePair<string, string>("itemID", item.Id)
+                        }
+                    );
+                    return response.Success;
+                }
+                catch
+                {
+
+                }
+                return false;
+            });
+        }
+
         public bool IsPluginFree(string plugnName)
         {
             return _freePlugins.Any(p => p == plugnName);
@@ -280,6 +406,18 @@ namespace Panacea.Modules.Billing
         }
 
         private Task DoWhileBusy(Func<Task> act)
+        {
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                return ui.DoWhileBusy(act);
+            }
+            else
+            {
+                return act();
+            }
+        }
+
+        private Task<T> DoWhileBusy<T>(Func<Task<T>> act)
         {
             if (_core.TryGetUiManager(out IUiManager ui))
             {
@@ -360,6 +498,11 @@ namespace Panacea.Modules.Billing
         {
             if (_core.UserService.User.Id == null) return new List<Service>();
             return _services.Where(s => s.RestDuration > 0 || s.Duration == -1.0).ToList();
+        }
+
+        public IServiceMonitor CreateServiceMonitor()
+        {
+            return new ServiceMonitor(_core, this);
         }
     }
 }

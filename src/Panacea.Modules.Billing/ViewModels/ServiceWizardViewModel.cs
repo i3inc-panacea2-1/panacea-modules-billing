@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.Integration;
@@ -252,18 +253,12 @@ namespace Panacea.Modules.Billing.ViewModels
 
         private void _webBrowser_DocumentCompleted(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
         {
-            if (e.Url.ToString().ToLower().Contains("billing/payment/completed/"))
+            var regex = new Regex(@"billing\/([^\/]*)\/([^\/]*)\/");
+            var match = regex.Match(e.Url.ToString().ToLower());
+            if (match.Success)
             {
+                Success = match.Groups[2].Value == "completed";
                 TabsSelectedIndex = 2;
-                if (!_webBrowser.DocumentText.Contains("panel-danger"))
-                {
-                   
-                    Success = true;
-                }
-                else
-                {
-                    Success = false;
-                }
             }
         }
 
@@ -456,11 +451,11 @@ namespace Panacea.Modules.Billing.ViewModels
                 _webBrowser.DocumentCompleted -= _webBrowser_DocumentCompleted;
                 _webBrowser?.Dispose();
             }
-           
+
             _host?.Dispose();
-            if(!_waitingForAnotherTask)
+            if (!_waitingForAnotherTask)
                 _source.TrySetResult(false);
-                
+
         }
 
         System.Windows.Forms.WebBrowser _webBrowser;
@@ -521,7 +516,7 @@ namespace Panacea.Modules.Billing.ViewModels
                             //todo Error?.Invoke(this, new Translator("core").Translate("Connection error. Please try again."));
                         }
                     });
-                  
+
                 }
             }
             catch
