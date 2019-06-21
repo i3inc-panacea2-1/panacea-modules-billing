@@ -438,11 +438,29 @@ namespace Panacea.Modules.Billing.ViewModels
 
         public override async void Activate()
         {
+            if(_core.TryGetUiManager(out IUiManager ui))
+            {
+                ui.Back += Ui_Back;
+            }
             await LoadPackages();
+        }
+
+        private void Ui_Back(object sender, BeforeNavigateEventArgs e)
+        {
+            if (TabsSelectedIndex > 0)
+            {
+                TabsSelectedIndex--;
+                e.Cancel = true;
+            }
+           
         }
 
         public override void Deactivate()
         {
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                ui.Back -= Ui_Back;
+            }
             WebBrowserControl = null;
             if (_webBrowser != null)
             {
