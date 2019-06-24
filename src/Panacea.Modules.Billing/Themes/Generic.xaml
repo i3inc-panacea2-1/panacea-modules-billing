@@ -97,14 +97,14 @@
                                             Orientation="Horizontal">
                                             <TextBlock
                                                 VerticalAlignment="Top"
-                                                pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                FontSize="{DynamicResource FontSize-Small}"
                                                 Foreground="{TemplateBinding Background}"
                                                 LineStackingStrategy="BlockLineHeight"
                                                 Text="$" />
 
                                             <TextBlock
                                                 VerticalAlignment="Center"
-                                                pcontrols:Material.RelativeFontSizeRatio="1.4"
+                                                FontSize="{DynamicResource FontSize-Xx-Large}"
                                                 FontWeight="Bold"
                                                 Foreground="{TemplateBinding Background}"
                                                 LineStackingStrategy="BlockLineHeight"
@@ -112,10 +112,9 @@
                                             <TextBlock
                                                 Margin="0,0,0,1"
                                                 VerticalAlignment="Bottom"
-                                               pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                                FontSize="{DynamicResource FontSize-Small}"
                                                 FontWeight="SemiBold"
                                                 Foreground="{TemplateBinding Background}"
-                                                
                                                 LineStackingStrategy="BlockLineHeight"
                                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Service.VisiblePriceDecimalPart}" />
                                         </StackPanel>
@@ -123,7 +122,7 @@
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Top"
-                                            pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                            FontSize="{DynamicResource FontSize-Small}"
                                             FontWeight="Normal"
                                             Foreground="{TemplateBinding Background}"
                                             LineStackingStrategy="BlockLineHeight"

@@ -14,7 +14,7 @@
         <TextBlock
             Margin="10"
             VerticalAlignment="Center"
-            pcontrols:Material.RelativeFontSizeRatio="1.2"
+            FontSize="{DynamicResource FontSize-X-Large}"
             Text="{multilinguality:Translate 'You must select at least 1 Package or Service in order to continue.',
                                              'Billing'}"
             TextAlignment="Center" />

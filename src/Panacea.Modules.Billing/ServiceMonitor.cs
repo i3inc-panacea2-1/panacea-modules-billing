@@ -144,5 +144,10 @@ namespace Panacea.Modules.Billing
                 _n1Hour = true;
             }
         }
+
+        public void Dispose()
+        {
+            _timer?.Dispose();
+        }
     }
 }

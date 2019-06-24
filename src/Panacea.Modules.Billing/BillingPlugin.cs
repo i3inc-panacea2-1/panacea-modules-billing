@@ -1,7 +1,9 @@
 ﻿using Panacea.Core;
 using Panacea.Models;
 using Panacea.Modularity.Billing;
+using Panacea.Modularity.UiManager;
 using Panacea.Modules.Billing.Models;
+using Panacea.Modules.Billing.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ namespace Panacea.Modules.Billing
         private readonly PanaceaServices _core;
         BillingManager _manager;
         List<string> _freePlugins;
+        SettingsControlViewModel _settingsControl;
         public BillingPlugin(PanaceaServices core)
         {
             _core = core;
@@ -38,6 +41,11 @@ namespace Panacea.Modules.Billing
             else
             {
                 throw new Exception(res.Error);
+            }
+            if(_core.TryGetUiManager(out IUiManager ui))
+            {
+                _settingsControl = new SettingsControlViewModel();
+                ui.AddSettingsControl(_settingsControl);
             }
         }
 

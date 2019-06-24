@@ -94,7 +94,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Center"
                                                 ContentSource="Header"
-                                                pcontrols:Material.RelativeFontSizeRatio="1.0"/>
+                                                TextElement.FontSize="{DynamicResource FontSize-Normal}"/>
                                         </Grid>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsSelected" Value="True">

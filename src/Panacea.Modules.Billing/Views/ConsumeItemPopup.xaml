@@ -20,7 +20,7 @@
         <TextBlock
             Margin="20"
             HorizontalAlignment="Center"
-            pcontrols:Material.RelativeFontSizeRatio="1.1"
+            TextElement.FontSize="{DynamicResource FontSize-Large}"
             Text="{multilinguality:Translate 'You are about to consume an item.',
                                              'core'}" />
         <Grid Grid.Row="1">
@@ -35,7 +35,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock
                     Margin="10,0"
-                    pcontrols:Material.RelativeFontSizeRatio="1.1"
+                    TextElement.FontSize="{DynamicResource FontSize-Large}"
                     Text="{Binding Path=Item.Name}"
                     TextAlignment="Center"
                     TextWrapping="Wrap" />
@@ -51,18 +51,18 @@
                 <TextBlock
                     Margin="5"
                     HorizontalAlignment="Center"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
+                    TextElement.FontSize="{DynamicResource FontSize-Normal}"
                     Text="{multilinguality:Translate 'You have',
                                                      'core'}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    pcontrols:Material.RelativeFontSizeRatio="1.6"
+                    TextElement.FontSize="{DynamicResource FontSize-Xx-Large}"
                     Text="{Binding Service.Quantity}" />
                 <TextBlock
                     Margin="5"
                     HorizontalAlignment="Center"
-                    pcontrols:Material.RelativeFontSizeRatio="1.0"
+                    TextElement.FontSize="{DynamicResource FontSize-Normal}"
                     Text="{multilinguality:Translate 'remaining item(s) for service',
                                                      'core'}"
                     TextAlignment="Center"
@@ -70,7 +70,7 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    pcontrols:Material.RelativeFontSizeRatio="1.1"
+                   TextElement.FontSize="{DynamicResource FontSize-Large}"
                     Text="{Binding Service.Name}" />
             </StackPanel>
         </Grid>
@@ -78,7 +78,7 @@
             Grid.Row="2"
             Margin="10"
             HorizontalAlignment="Center"
-            pcontrols:Material.RelativeFontSizeRatio=".95"
+            TextElement.FontSize="{DynamicResource FontSize-Small}"
             Text="{multilinguality:Translate 'If you accept, you will be able to view this item until the service expires. Are you sure you want to continue?',
                                              'core'}"
             TextAlignment="Center"

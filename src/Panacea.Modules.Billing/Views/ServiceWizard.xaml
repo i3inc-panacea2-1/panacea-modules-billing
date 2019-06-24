@@ -69,7 +69,7 @@
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                        FontSize="{DynamicResource FontSize-Small}"
                                         TextAlignment="Left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasServices, Converter={StaticResource BoolToVis}}">
@@ -82,7 +82,7 @@
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio="0.9"
+                                       FontSize="{DynamicResource FontSize-Small}"
                                         TextAlignment="Left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasServices, Converter={StaticResource NotBoolToVis}}">
@@ -98,7 +98,7 @@
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio=".9"
+                                        FontSize="{DynamicResource FontSize-Small}"
                                         TextAlignment="left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasPackages, Converter={StaticResource BoolToVis}}">
@@ -112,7 +112,7 @@
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
-                                        pcontrols:Material.RelativeFontSizeRatio=".9"
+                                        FontSize="{DynamicResource FontSize-Small}"
                                         TextAlignment="left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasPackages, Converter={StaticResource NotBoolToVis}}">
@@ -130,7 +130,7 @@
                                     <Button
                                         Name="ReqAssistanceButton"
                                         Margin="0,0,10,0"
-                                        pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                        FontSize="{DynamicResource FontSize-Large}"
                                         Content="{multilinguality:Translate 'Request Assistance',
                                                                             'Core'}"
                                         Visibility="Visible" />
@@ -161,7 +161,7 @@
                                                     <TextBlock
                                                         Margin="2,1,1,2"
                                                         VerticalAlignment="Center"
-                                                        pcontrols:Material.RelativeFontSizeRatio=".8"
+                                                        FontSize="{DynamicResource FontSize-X-Small}"
                                                         FontWeight="Bold"
                                                         Foreground="White"
                                                         Text="{Binding SelectedItems.Count}"
@@ -218,7 +218,7 @@
                                                                                 </Button>
                                                                                 <TextBlock
                                                                                     Grid.Column="1"
-                                                                                    pcontrols:Material.RelativeFontSizeRatio="1.2"
+                                                                                   FontSize="{DynamicResource FontSize-X-Large}"
                                                                                     FontWeight="SemiBold"
                                                                                     Text="{Binding Name}"
                                                                                     TextWrapping="Wrap" />
@@ -226,14 +226,14 @@
                                                                                 <TextBlock
                                                                                     Grid.Row="1"
                                                                                     Grid.Column="1"
-                                                                                    pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                                                    FontSize="{DynamicResource FontSize-Normal}"
                                                                                     Text="{Binding DurationInDaysString.Text}"
                                                                                     TextWrapping="Wrap"
                                                                                     Visibility="{Binding IsPricePerDay, Converter={StaticResource NotBoolToVis}}" />
                                                                                 <TextBlock
                                                                                     Grid.Row="1"
                                                                                     Grid.Column="1"
-                                                                                    pcontrols:Material.RelativeFontSizeRatio=".9"
+                                                                                    FontSize="{DynamicResource FontSize-Small}"
                                                                                     Text="{multilinguality:Translate 'Flexible',
                                                                                                                      'core'}"
                                                                                     TextWrapping="Wrap"
@@ -245,20 +245,20 @@
                                                                                     Orientation="Horizontal">
                                                                                     <TextBlock
                                                                                         VerticalAlignment="Center"
-                                                                                        pcontrols:Material.RelativeFontSizeRatio=".9"
+                                                                                         FontSize="{DynamicResource FontSize-Small}"
                                                                                         Foreground="Black"
                                                                                         Text="$" />
                                                                                     <TextBlock
                                                                                         HorizontalAlignment="Right"
                                                                                         VerticalAlignment="Center"
-                                                                                        pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                                                         FontSize="{DynamicResource FontSize-Large}"
                                                                                         FontWeight="Normal"
                                                                                         Foreground="Black"
                                                                                         Text="{Binding VisiblePrice, StringFormat=#0.00}"
                                                                                         TextWrapping="Wrap" />
                                                                                     <TextBlock
                                                                                         VerticalAlignment="Center"
-                                                                                        pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                                                        FontSize="{DynamicResource FontSize-Normal}"
                                                                                         FontWeight="Normal"
                                                                                         Foreground="Black"
                                                                                         Text="/"
@@ -266,7 +266,7 @@
 
                                                                                     <TextBlock
                                                                                         VerticalAlignment="Center"
-                                                                                        pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                                                        FontSize="{DynamicResource FontSize-Normal}"
                                                                                         FontWeight="Normal"
                                                                                         Foreground="Black"
                                                                                         Text="{multilinguality:Translate 'day',
@@ -287,7 +287,7 @@
                                                         Margin="10"
                                                         Visibility="{Binding HasSelectedPerDay, Converter={StaticResource BoolToVis}}">
                                                         <TextBlock
-                                                            pcontrols:Material.RelativeFontSizeRatio="0.8"
+                                                            FontSize="{DynamicResource FontSize-X-Small}"
                                                             Text="{multilinguality:Translate 'Use the slider to define preferred duration.',
                                                                                              'core'}"
                                                             TextAlignment="Center" />
@@ -303,14 +303,14 @@
                                                             <TextBlock
                                                                 Margin="5"
                                                                 VerticalAlignment="Bottom"
-                                                                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                                FontSize="{DynamicResource FontSize-Large}"
                                                                 FontWeight="Bold"
                                                                 Foreground="#222222"
                                                                 Text="{Binding ElementName=DaysSlider, Path=Value}" />
                                                             <TextBlock
                                                                 Margin="5"
                                                                 VerticalAlignment="Bottom"
-                                                                pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                               FontSize="{DynamicResource FontSize-Large}"
                                                                 FontWeight="Bold"
                                                                 Foreground="#222222"
                                                                 Text="{multilinguality:Translate 'day(s)',
@@ -331,17 +331,17 @@
 
                                                         <TextBlock
                                                             Margin="0,0,10,0"
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                            FontSize="{DynamicResource FontSize-Large}"
                                                             Foreground="Black"
                                                             Text="{multilinguality:Translate 'Total',
                                                                                              'core'}" />
                                                         <TextBlock
                                                             VerticalAlignment="Center"
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                            FontSize="{DynamicResource FontSize-Large}"
                                                             Foreground="Black"
                                                             Text="$" />
                                                         <TextBlock
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.1"
+                                                            FontSize="{DynamicResource FontSize-Large}"
                                                             FontWeight="Bold"
                                                             Text="{Binding Sum, StringFormat=#0.00}" />
                                                     </StackPanel>
@@ -350,7 +350,7 @@
                                                         Margin="0,0,10,0"
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Bottom"
-                                                        pcontrols:Material.RelativeFontSizeRatio=".8"
+                                                        FontSize="{DynamicResource FontSize-X-Small}"
                                                         FontStyle="Italic"
                                                         Foreground="#222222"
                                                         Text="{multilinguality:Translate 'all taxes included',
@@ -364,7 +364,7 @@
                                                             Name="CheckoutButton"
                                                             Grid.Column="1"
                                                             Margin="5,3,3,5"
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Background="DodgerBlue"
                                                             Command="{Binding CheckoutCommand}"
                                                             Content="{multilinguality:Translate 'Checkout',
@@ -372,7 +372,7 @@
                                                             Foreground="White" />
                                                         <Button
                                                             Margin="5,3,3,5"
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Command="{Binding CancelCartCommand}"
                                                             Content="{multilinguality:Translate 'Pick another package',
                                                                                                 'Core'}"
@@ -380,7 +380,7 @@
                                                             Visibility="{Binding CancelButtonVisibility}" />
                                                         <Button
                                                             Margin="5,3,3,5"
-                                                            pcontrols:Material.RelativeFontSizeRatio="1.0"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Command="{Binding CancelCartCommand}"
                                                             Content="{multilinguality:Translate 'Add more services',
                                                                                                 'Core'}"
@@ -438,7 +438,7 @@
                     <StackPanel Name="success" Grid.ColumnSpan="2">
                         <TextBlock
                             Margin="0,150"
-                            pcontrols:Material.RelativeFontSizeRatio="1.6"
+                            FontSize="{DynamicResource FontSize-Xxx-Large}"
                             Text="{multilinguality:Translate 'Your purchase has been completed!',
                                                              'core'}"
                             TextAlignment="Center"
@@ -448,7 +448,7 @@
                             Margin="0,0"
                             Padding="20"
                             HorizontalAlignment="Center"
-                            pcontrols:Material.RelativeFontSizeRatio="1.2"
+                            FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding CompleteCommand}"
                             Content="{multilinguality:Translate 'Start using Panacea',
                                                                 'core'}"
@@ -458,7 +458,7 @@
                     <StackPanel Name="cancelled" Grid.ColumnSpan="2">
                         <TextBlock
                             Margin="0,150"
-                            pcontrols:Material.RelativeFontSizeRatio="1.6"
+                            FontSize="{DynamicResource FontSize-Xxx-Large}"
                             Text="{multilinguality:Translate 'Your purchase has been cancelled.',
                                                              'core'}"
                             TextAlignment="Center"
@@ -469,7 +469,7 @@
                             Margin="3"
                             Padding="20"
                             HorizontalAlignment="Center"
-                            pcontrols:Material.RelativeFontSizeRatio="1.2"
+                           FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding BuyServiceCommand}"
                             Content="{multilinguality:Translate 'Buy Service',
                                                                 'core'}"

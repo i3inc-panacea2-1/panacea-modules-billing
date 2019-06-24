@@ -20,7 +20,7 @@
                 <TextBlock
                     Name="TitleTextBlock"
                     Margin="5"
-                    controls:Material.RelativeFontSizeRatio="1.4"
+                    TextElement.FontSize="{DynamicResource FontSize-X-Large}"
                     FontWeight="DemiBold"
                     Text="{multilinguality:Translate 'Please confirm the following personal information',
                                                      'core'}"
@@ -29,18 +29,18 @@
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock
                         Margin="5"
-                        controls:Material.RelativeFontSizeRatio="1.2"
+                        FontSize="{DynamicResource FontSize-X-Large}"
                         Text="{Binding FirstName}" />
                     <TextBlock
                         Margin="10,5,5,5"
-                        controls:Material.RelativeFontSizeRatio="1.2"
+                        FontSize="{DynamicResource FontSize-X-Large}"
                         Text="{Binding LastName}" />
                 </StackPanel>
                 <Button
                     Name="ConfirmButton"
                     Margin="25"
                     HorizontalAlignment="Center"
-                    controls:Material.RelativeFontSizeRatio="1.1"
+                    FontSize="{DynamicResource FontSize-Large}"
                     Style="{DynamicResource PrimaryButton}"
                     Command="{Binding ConfirmCommand}"
                     Content="{multilinguality:Translate 'Confirm',
@@ -48,7 +48,7 @@
                    />
                 <TextBlock
                     Margin="10"
-                    controls:Material.RelativeFontSizeRatio="1.0"
+                    FontSize="{DynamicResource FontSize-Normal}"
                     TextAlignment="Center">
                     <TextBlock.Inlines>
                         <Run Name="NotConfirmedTectBlock" Text="{multilinguality:Translate 'Not you?', 'core'}" />
