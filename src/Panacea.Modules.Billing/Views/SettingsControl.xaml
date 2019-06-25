@@ -22,6 +22,7 @@
             Content="{multilinguality:Translate 'Buy service',
                                                 'Billing'}"
             FontSize="{DynamicResource FontSize-Normal}"
-            Style="{DynamicResource PrimaryButton}" />
+            Style="{DynamicResource PrimaryButton}"
+            Command="{Binding BuyServiceCommand}"/>
     </UniformGrid>
 </UserControl>

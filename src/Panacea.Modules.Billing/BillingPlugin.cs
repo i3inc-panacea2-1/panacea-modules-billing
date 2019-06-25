@@ -44,7 +44,7 @@ namespace Panacea.Modules.Billing
             }
             if(_core.TryGetUiManager(out IUiManager ui))
             {
-                _settingsControl = new SettingsControlViewModel();
+                _settingsControl = new SettingsControlViewModel(GetBillingManager());
                 ui.AddSettingsControl(_settingsControl);
             }
         }
