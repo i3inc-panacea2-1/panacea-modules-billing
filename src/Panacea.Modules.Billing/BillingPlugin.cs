@@ -19,7 +19,9 @@ namespace Panacea.Modules.Billing
         List<string> _freePlugins;
         SettingsControlViewModel _settingsControl;
 
-        [PanaceaInject("AllFree","Makes all plugins free", "AllFree=1")]
+        [PanaceaInject("AllFree", "Makes all plugins free", "AllFree=1")]
+        protected bool AllFree { get; set; }
+
         public BillingPlugin(PanaceaServices core)
         {
             _core = core;
@@ -39,6 +41,10 @@ namespace Panacea.Modules.Billing
             if (res.Success)
             {
                 _freePlugins = res.Result.FreePlugins;
+                if (AllFree)
+                {
+                    _freePlugins.Add("*");
+                }
             }
             else
             {
