@@ -50,7 +50,7 @@ namespace Panacea.Modules.Billing
             {
                 throw new Exception(res.Error);
             }
-            if(_core.TryGetUiManager(out IUiManager ui))
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
                 _settingsControl = new SettingsControlViewModel(GetBillingManager());
                 ui.AddSettingsControl(_settingsControl);
