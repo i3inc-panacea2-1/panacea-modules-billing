@@ -18,6 +18,8 @@ namespace Panacea.Modules.Billing
         BillingManager _manager;
         List<string> _freePlugins;
         SettingsControlViewModel _settingsControl;
+
+        [PanaceaInject("AllFree","Makes all plugins free", "AllFree=1")]
         public BillingPlugin(PanaceaServices core)
         {
             _core = core;

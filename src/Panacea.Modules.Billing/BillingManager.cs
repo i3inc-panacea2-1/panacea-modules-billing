@@ -393,7 +393,7 @@ namespace Panacea.Modules.Billing
 
         public bool IsPluginFree(string plugnName)
         {
-            return _freePlugins.Any(p => p == plugnName);
+            return _freePlugins.Any(p => p == plugnName || p =="*");
         }
 
         protected Task UpdateUserServicesWithUiAsync()
