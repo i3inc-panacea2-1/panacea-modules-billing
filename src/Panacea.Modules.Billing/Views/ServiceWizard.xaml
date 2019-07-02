@@ -38,7 +38,7 @@
         <TabControl SelectedIndex="{Binding TabsSelectedIndex}" Style="{StaticResource ServiceWizardTabControl}">
             <TabItem
                 Header="{multilinguality:Translate '1. Choose Package',
-                                                   'core'}"
+                                                   'Billing'}"
                 IsEnabled="false"
                 IsSelected="True">
                 <Grid>
@@ -73,10 +73,10 @@
                                         TextAlignment="Left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasServices, Converter={StaticResource BoolToVis}}">
-                                        <Run Text="{multilinguality:Translate 'Tap on a package to add it to your cart. You can only purchase one package per transaction. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'core'}" />
-                                        <Run Text="{multilinguality:Translate 'If you prefer to compose your own package', 'core'}" />
+                                        <Run Text="{multilinguality:Translate 'Tap on a package to add it to your cart. You can only purchase one package per transaction. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
+                                        <Run Text="{multilinguality:Translate 'If you prefer to compose your own package', 'Billing'}" />
                                         <Hyperlink>
-                                            <TextBlock Text="{multilinguality:Translate 'press here.', 'core'}" />
+                                            <TextBlock Text="{multilinguality:Translate 'press here.', 'Billing'}" />
                                         </Hyperlink>
                                     </TextBlock>
                                     <TextBlock
@@ -86,7 +86,7 @@
                                         TextAlignment="Left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasServices, Converter={StaticResource NotBoolToVis}}">
-                                        <Run Text="{multilinguality:Translate 'Tap on a package to add it to your cart. You can only purchase one package per transaction. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'core'}" />
+                                        <Run Text="{multilinguality:Translate 'Tap on a package to add it to your cart. You can only purchase one package per transaction. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
 
                                     </TextBlock>
                                 </Grid>
@@ -102,10 +102,10 @@
                                         TextAlignment="left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasPackages, Converter={StaticResource BoolToVis}}">
-                                        <Run Text="{multilinguality:Translate 'Tap on a service to add it to your cart. You can select multiple services. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'core'}" />
-                                        <Run Text="{multilinguality:Translate 'Alternatively, go back to', 'core'}" />
+                                        <Run Text="{multilinguality:Translate 'Tap on a service to add it to your cart. You can select multiple services. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
+                                        <Run Text="{multilinguality:Translate 'Alternatively, go back to', 'Billing'}" />
                                         <Hyperlink>
-                                            <TextBlock Text="{multilinguality:Translate 'standard packages', 'core'}" />
+                                            <TextBlock Text="{multilinguality:Translate 'standard packages', 'Billing'}" />
                                         </Hyperlink>
                                     </TextBlock>
 
@@ -116,7 +116,7 @@
                                         TextAlignment="left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasPackages, Converter={StaticResource NotBoolToVis}}">
-                                        <Run Text="{multilinguality:Translate 'Tap on a service to add it to your cart. You can select multiple services. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'core'}" />
+                                        <Run Text="{multilinguality:Translate 'Tap on a service to add it to your cart. You can select multiple services. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
                                     </TextBlock>
 
                                 </Grid>
@@ -132,7 +132,7 @@
                                         Margin="0,0,10,0"
                                         FontSize="{DynamicResource FontSize-Large}"
                                         Content="{multilinguality:Translate 'Request Assistance',
-                                                                            'Core'}"
+                                                                            'Billing'}"
                                         Visibility="Visible" />
                                     <Grid>
                                         <Button
@@ -235,7 +235,7 @@
                                                                                     Grid.Column="1"
                                                                                     FontSize="{DynamicResource FontSize-Small}"
                                                                                     Text="{multilinguality:Translate 'Flexible',
-                                                                                                                     'core'}"
+                                                                                                                     'Billing'}"
                                                                                     TextWrapping="Wrap"
                                                                                     Visibility="{Binding IsPricePerDay, Converter={StaticResource BoolToVis}}" />
                                                                                 <StackPanel
@@ -270,7 +270,7 @@
                                                                                         FontWeight="Normal"
                                                                                         Foreground="Black"
                                                                                         Text="{multilinguality:Translate 'day',
-                                                                                                                         'Core'}"
+                                                                                                                         'Billing'}"
                                                                                         Visibility="{Binding IsPricePerDay, Converter={StaticResource BoolToVis}}" />
                                                                                 </StackPanel>
 
@@ -289,7 +289,7 @@
                                                         <TextBlock
                                                             FontSize="{DynamicResource FontSize-X-Small}"
                                                             Text="{multilinguality:Translate 'Use the slider to define preferred duration.',
-                                                                                             'core'}"
+                                                                                             'Billing'}"
                                                             TextAlignment="Center" />
                                                         <Slider
                                                             Name="DaysSlider"
@@ -314,7 +314,7 @@
                                                                 FontWeight="Bold"
                                                                 Foreground="#222222"
                                                                 Text="{multilinguality:Translate 'day(s)',
-                                                                                                 'core'}" />
+                                                                                                 'Billing'}" />
                                                         </StackPanel>
 
                                                     </StackPanel>
@@ -334,7 +334,7 @@
                                                             FontSize="{DynamicResource FontSize-Large}"
                                                             Foreground="Black"
                                                             Text="{multilinguality:Translate 'Total',
-                                                                                             'core'}" />
+                                                                                             'Billing'}" />
                                                         <TextBlock
                                                             VerticalAlignment="Center"
                                                             FontSize="{DynamicResource FontSize-Large}"
@@ -354,7 +354,7 @@
                                                         FontStyle="Italic"
                                                         Foreground="#222222"
                                                         Text="{multilinguality:Translate 'all taxes included',
-                                                                                         'core'}" />
+                                                                                         'Billing'}" />
                                                     <Grid Grid.Row="4" Margin="0,5,0,0">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition />
@@ -368,14 +368,14 @@
                                                             Background="DodgerBlue"
                                                             Command="{Binding CheckoutCommand}"
                                                             Content="{multilinguality:Translate 'Checkout',
-                                                                                                'Core'}"
+                                                                                                'Billing'}"
                                                             Foreground="White" />
                                                         <Button
                                                             Margin="5,3,3,5"
                                                             FontSize="{DynamicResource FontSize-Normal}"
                                                             Command="{Binding CancelCartCommand}"
                                                             Content="{multilinguality:Translate 'Pick another package',
-                                                                                                'Core'}"
+                                                                                                'Billing'}"
                                                             Foreground="Black"
                                                             Visibility="{Binding CancelButtonVisibility}" />
                                                         <Button
@@ -383,7 +383,7 @@
                                                             FontSize="{DynamicResource FontSize-Normal}"
                                                             Command="{Binding CancelCartCommand}"
                                                             Content="{multilinguality:Translate 'Add more services',
-                                                                                                'Core'}"
+                                                                                                'Billing'}"
                                                             Foreground="Black"
                                                             Visibility="{Binding CancelButtonServicesVisibility}" />
                                                     </Grid>
@@ -420,7 +420,7 @@
 
             </TabItem>
 
-            <TabItem Header="{multilinguality:Translate '2. Make Payment', 'core'}" IsEnabled="false">
+            <TabItem Header="{multilinguality:Translate '2. Make Payment', 'Billing'}" IsEnabled="false">
                 <Grid>
 
                     <ProgressBar IsIndeterminate="True" />
@@ -429,7 +429,7 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="{multilinguality:Translate '3. Confirmation', 'core'}" IsEnabled="false">
+            <TabItem Header="{multilinguality:Translate '3. Confirmation', 'Billing'}" IsEnabled="false">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="541*" />
@@ -440,7 +440,7 @@
                             Margin="0,150"
                             FontSize="{DynamicResource FontSize-Xxx-Large}"
                             Text="{multilinguality:Translate 'Your purchase has been completed!',
-                                                             'core'}"
+                                                             'Billing'}"
                             TextAlignment="Center"
                             Visibility="{Binding Success, Converter={StaticResource BoolToVis}}" />
 
@@ -451,7 +451,7 @@
                             FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding CompleteCommand}"
                             Content="{multilinguality:Translate 'Start using Panacea',
-                                                                'core'}"
+                                                                'Billing'}"
                             Style="{DynamicResource PrimaryButton}"
                             Visibility="{Binding Success, Converter={StaticResource BoolToVis}}" />
                     </StackPanel>
@@ -460,7 +460,7 @@
                             Margin="0,150"
                             FontSize="{DynamicResource FontSize-Xxx-Large}"
                             Text="{multilinguality:Translate 'Your purchase has been cancelled.',
-                                                             'core'}"
+                                                             'Billing'}"
                             TextAlignment="Center"
                             Visibility="{Binding Success, Converter={StaticResource NotBoolToVis}}" />
 
@@ -472,7 +472,7 @@
                            FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding BuyServiceCommand}"
                             Content="{multilinguality:Translate 'Buy Service',
-                                                                'core'}"
+                                                                'Billing'}"
                             Style="{DynamicResource PrimaryButton}"
                             Visibility="{Binding Success, Converter={StaticResource NotBoolToVis}}" />
 

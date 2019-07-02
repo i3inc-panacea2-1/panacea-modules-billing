@@ -259,6 +259,10 @@ namespace Panacea.Modules.Billing.ViewModels
             {
                 Success = match.Groups[2].Value == "completed";
                 TabsSelectedIndex = 2;
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.Back -= Ui_Back;
+                }
             }
         }
 
@@ -341,6 +345,7 @@ namespace Panacea.Modules.Billing.ViewModels
             get => _cartBoxIsOpen;
             set
             {
+                if (!SelectedItems.Any()) return;
                 _cartBoxIsOpen = value;
                 OnPropertyChanged();
             }

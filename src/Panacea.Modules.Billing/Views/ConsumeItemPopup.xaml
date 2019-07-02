@@ -22,7 +22,7 @@
             HorizontalAlignment="Center"
             TextElement.FontSize="{DynamicResource FontSize-Large}"
             Text="{multilinguality:Translate 'You are about to consume an item.',
-                                             'core'}" />
+                                             'Billing'}" />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -53,7 +53,7 @@
                     HorizontalAlignment="Center"
                     TextElement.FontSize="{DynamicResource FontSize-Normal}"
                     Text="{multilinguality:Translate 'You have',
-                                                     'core'}" />
+                                                     'Billing'}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -64,7 +64,7 @@
                     HorizontalAlignment="Center"
                     TextElement.FontSize="{DynamicResource FontSize-Normal}"
                     Text="{multilinguality:Translate 'remaining item(s) for service',
-                                                     'core'}"
+                                                     'Billing'}"
                     TextAlignment="Center"
                     TextWrapping="Wrap" />
                 <TextBlock
@@ -80,7 +80,7 @@
             HorizontalAlignment="Center"
             TextElement.FontSize="{DynamicResource FontSize-Small}"
             Text="{multilinguality:Translate 'If you accept, you will be able to view this item until the service expires. Are you sure you want to continue?',
-                                             'core'}"
+                                             'Billing'}"
             TextAlignment="Center"
             TextWrapping="Wrap" />
         <StackPanel
@@ -92,14 +92,14 @@
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding YesCommand}"
                 Content="{multilinguality:Translate 'Yes',
-                                                    'core'}"
+                                                    'Billing'}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
                 Name="btnNo"
                 Background="{DynamicResource ColorNone}"
                 Command="{Binding NoCommand}"
                 Content="{multilinguality:Translate 'No',
-                                                    'core'}"
+                                                    'Billing'}"
                 Style="{DynamicResource PrimaryButton}" />
         </StackPanel>
     </Grid>

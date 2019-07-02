@@ -41,14 +41,14 @@
                 Background="{DynamicResource ColorSuccess}"
                 Command="{Binding BuyServiceCommand}"
                 Content="{multilinguality:Translate 'Buy Service',
-                                                    'core'}"
+                                                    'Billing'}"
                 Style="{DynamicResource PrimaryButton}" />
             <Button
                FontSize="{DynamicResource FontSize-Normal}"
                 Background="{DynamicResource ColorInformation}"
                 Command="{Binding SignInCommand}"
                 Content="{multilinguality:Translate 'Sign in',
-                                                    'core'}"
+                                                    'Billing'}"
                 Style="{DynamicResource PrimaryButton}"
                 Visibility="{Binding SignedIn, Converter={StaticResource NotBoolToVis}}" />
 
@@ -59,7 +59,7 @@
             Margin="10"
             FontSize="{DynamicResource FontSize-Large}"
             Text="{multilinguality:Translate 'Please use the Bedside Terminal to purchase services',
-                                             'core'}"
+                                             'Billing'}"
             TextAlignment="Center" />
         <TextBlock
             Name="Review"
@@ -68,7 +68,7 @@
             VerticalAlignment="Center"
             FontSize="{DynamicResource FontSize-Small}"
             Text="{multilinguality:Translate 'Review services you have already purchased in My account page',
-                                             'core'}"
+                                             'Billing'}"
             TextAlignment="Center"
             Visibility="{Binding SingedIn, Converter={StaticResource BoolToVis}}" />
     </Grid>

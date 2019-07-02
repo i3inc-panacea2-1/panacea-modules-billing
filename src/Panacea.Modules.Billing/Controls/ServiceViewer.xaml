@@ -146,7 +146,7 @@
                                         FontSize="{DynamicResource FontSize-X-Large}"
                                         Foreground="Black"
                                         Text="{multilinguality:Translate 'Flexible',
-                                                                         'core'}"
+                                                                         'Billing'}"
                                         TextAlignment="Center"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding IsPricePerDay, Converter={StaticResource BoolToVis}}" />

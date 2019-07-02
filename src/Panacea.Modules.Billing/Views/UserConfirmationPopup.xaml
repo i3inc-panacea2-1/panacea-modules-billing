@@ -23,7 +23,7 @@
                     TextElement.FontSize="{DynamicResource FontSize-X-Large}"
                     FontWeight="DemiBold"
                     Text="{multilinguality:Translate 'Please confirm the following personal information',
-                                                     'core'}"
+                                                     'Billing'}"
                     TextAlignment="Center" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -44,16 +44,16 @@
                     Style="{DynamicResource PrimaryButton}"
                     Command="{Binding ConfirmCommand}"
                     Content="{multilinguality:Translate 'Confirm',
-                                                        'core'}"
+                                                        'Billing'}"
                    />
                 <TextBlock
                     Margin="10"
                     FontSize="{DynamicResource FontSize-Normal}"
                     TextAlignment="Center">
                     <TextBlock.Inlines>
-                        <Run Name="NotConfirmedTectBlock" Text="{multilinguality:Translate 'Not you?', 'core'}" />
+                        <Run Name="NotConfirmedTectBlock" Text="{multilinguality:Translate 'Not you?', 'Billing'}" />
                         <Hyperlink Command="{Binding NotMeCommand}">
-                            <TextBlock Text="{multilinguality:Translate 'Register or sign in', 'core'}" />
+                            <TextBlock Text="{multilinguality:Translate 'Register or sign in', 'Billing'}" />
                         </Hyperlink>
                     </TextBlock.Inlines>
                 </TextBlock>

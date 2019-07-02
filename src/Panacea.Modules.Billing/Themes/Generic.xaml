@@ -127,7 +127,7 @@
                                             Foreground="{TemplateBinding Background}"
                                             LineStackingStrategy="BlockLineHeight"
                                             Text="{multilinguality:Translate 'per day',
-                                                                             'Core'}"
+                                                                             'Billing'}"
                                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Service.IsPricePerDay, Converter={StaticResource BoolToVis}}" />
 
                                     </StackPanel>

@@ -31,6 +31,6 @@
             HorizontalAlignment="Center"
             Command="{Binding BuyCommand}"
             Content="{multilinguality:Translate 'Buy Service',
-                                                'core'}" />
+                                                'Billing'}" />
     </Grid>
 </UserControl>

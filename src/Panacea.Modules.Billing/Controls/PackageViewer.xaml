@@ -104,7 +104,7 @@
 
                             <TextBlock
                                 Padding="10,10,10,10"
-                                FontSize="{DynamicResource FontSize-Xx-Large}"
+                                FontSize="{DynamicResource FontSize-Large}"
                                 FontWeight="Bold"
                                 Foreground="#222"
                                 Text="{Binding Name}"
@@ -154,7 +154,7 @@
                                    FontSize="{DynamicResource FontSize-Large}"
                                     Foreground="Black"
                                     Text="{multilinguality:Translate 'Flexible',
-                                                                     'core'}"
+                                                                     'Billing'}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap"
                                     Visibility="{Binding IsPricePerDay, Converter={StaticResource BoolToVis}}" />
