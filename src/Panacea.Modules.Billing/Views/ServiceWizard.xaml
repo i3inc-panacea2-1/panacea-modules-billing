@@ -14,7 +14,7 @@
     xmlns:pcontrols="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
     xmlns:vm="clr-namespace:Panacea.Modules.Billing.ViewModels"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1600"
     Background="White"
     mc:Ignorable="d">
     <UserControl.DataContext>
@@ -62,10 +62,12 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+
                                 <Grid
                                     Name="PackagesText"
                                     Grid.Column="0"
-                                    Margin="0,0,10,0">
+                                    Margin="0,0,10,0"
+                                    Visibility="{Binding PackagesTextVisible, Converter={StaticResource BoolToVis}}">
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
@@ -75,14 +77,14 @@
                                         Visibility="{Binding HasServices, Converter={StaticResource BoolToVis}}">
                                         <Run Text="{multilinguality:Translate 'Tap on a package to add it to your cart. You can only purchase one package per transaction. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
                                         <Run Text="{multilinguality:Translate 'If you prefer to compose your own package', 'Billing'}" />
-                                        <Hyperlink>
+                                        <Hyperlink Command="{Binding SwitchToServicesCommand}">
                                             <TextBlock Text="{multilinguality:Translate 'press here.', 'Billing'}" />
                                         </Hyperlink>
                                     </TextBlock>
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
-                                       FontSize="{DynamicResource FontSize-Small}"
+                                        FontSize="{DynamicResource FontSize-Small}"
                                         TextAlignment="Left"
                                         TextWrapping="Wrap"
                                         Visibility="{Binding HasServices, Converter={StaticResource NotBoolToVis}}">
@@ -90,11 +92,12 @@
 
                                     </TextBlock>
                                 </Grid>
+
                                 <Grid
                                     Name="ServicesText"
                                     Grid.Column="0"
                                     Margin="0,0,10,0"
-                                    Visibility="Collapsed">
+                                    Visibility="{Binding PackagesTextVisible, Converter={StaticResource NotBoolToVis}}">
                                     <TextBlock
                                         Padding="0,2,10,2"
                                         VerticalAlignment="Center"
@@ -104,7 +107,7 @@
                                         Visibility="{Binding HasPackages, Converter={StaticResource BoolToVis}}">
                                         <Run Text="{multilinguality:Translate 'Tap on a service to add it to your cart. You can select multiple services. To proceed to payment page, select the shopping cart icon and then select the checkout button.', 'Billing'}" />
                                         <Run Text="{multilinguality:Translate 'Alternatively, go back to', 'Billing'}" />
-                                        <Hyperlink>
+                                        <Hyperlink Command="{Binding SwitchToServicesCommand}">
                                             <TextBlock Text="{multilinguality:Translate 'standard packages', 'Billing'}" />
                                         </Hyperlink>
                                     </TextBlock>
@@ -130,9 +133,9 @@
                                     <Button
                                         Name="ReqAssistanceButton"
                                         Margin="0,0,10,0"
-                                        FontSize="{DynamicResource FontSize-Large}"
                                         Content="{multilinguality:Translate 'Request Assistance',
                                                                             'Billing'}"
+                                        FontSize="{DynamicResource FontSize-Large}"
                                         Visibility="Visible" />
                                     <Grid>
                                         <Button
@@ -208,7 +211,8 @@
                                                                                     Margin="5,5,10,5"
                                                                                     HorizontalAlignment="Stretch"
                                                                                     VerticalAlignment="Stretch"
-                                                                                    Tag="{Binding}">
+                                                                                    Command="{Binding RelativeSource={RelativeSource AncestorType=local:ServiceWizard}, Path=DataContext.RemoveServiceCommand}"
+                                                                                    CommandParameter="{Binding}">
                                                                                     <Path
                                                                                         Margin="3"
                                                                                         Data="F1 M 2.90253,17.13C 0.967529,15.105 0,12.7063 0,9.93381C 0,7.16129 0.96875,4.81253 2.90625,2.88751C 4.84375,0.962524 7.24377,3.05176e-005 10.1063,3.05176e-005C 12.9688,3.05176e-005 15.36,0.962524 17.28,2.88751C 19.2001,4.81253 20.16,7.16129 20.16,9.93381C 20.16,12.7063 19.2001,15.1038 17.28,17.1263C 15.36,19.1488 12.9688,20.16 10.1063,20.16C 7.24377,20.16 4.84253,19.1501 2.90253,17.13 Z M 3.84003,11.04L 16.32,11.04L 16.32,8.64005L 3.84003,8.64005L 3.84003,11.04 Z "
@@ -218,7 +222,7 @@
                                                                                 </Button>
                                                                                 <TextBlock
                                                                                     Grid.Column="1"
-                                                                                   FontSize="{DynamicResource FontSize-X-Large}"
+                                                                                    FontSize="{DynamicResource FontSize-X-Large}"
                                                                                     FontWeight="SemiBold"
                                                                                     Text="{Binding Name}"
                                                                                     TextWrapping="Wrap" />
@@ -245,13 +249,13 @@
                                                                                     Orientation="Horizontal">
                                                                                     <TextBlock
                                                                                         VerticalAlignment="Center"
-                                                                                         FontSize="{DynamicResource FontSize-Small}"
+                                                                                        FontSize="{DynamicResource FontSize-Small}"
                                                                                         Foreground="Black"
                                                                                         Text="$" />
                                                                                     <TextBlock
                                                                                         HorizontalAlignment="Right"
                                                                                         VerticalAlignment="Center"
-                                                                                         FontSize="{DynamicResource FontSize-Large}"
+                                                                                        FontSize="{DynamicResource FontSize-Large}"
                                                                                         FontWeight="Normal"
                                                                                         Foreground="Black"
                                                                                         Text="{Binding VisiblePrice, StringFormat=#0.00}"
@@ -275,7 +279,6 @@
                                                                                 </StackPanel>
 
                                                                             </Grid>
-
                                                                         </Border>
                                                                     </StackPanel>
                                                                 </DataTemplate>
@@ -310,7 +313,7 @@
                                                             <TextBlock
                                                                 Margin="5"
                                                                 VerticalAlignment="Bottom"
-                                                               FontSize="{DynamicResource FontSize-Large}"
+                                                                FontSize="{DynamicResource FontSize-Large}"
                                                                 FontWeight="Bold"
                                                                 Foreground="#222222"
                                                                 Text="{multilinguality:Translate 'day(s)',
@@ -364,26 +367,26 @@
                                                             Name="CheckoutButton"
                                                             Grid.Column="1"
                                                             Margin="5,3,3,5"
-                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Background="DodgerBlue"
                                                             Command="{Binding CheckoutCommand}"
                                                             Content="{multilinguality:Translate 'Checkout',
                                                                                                 'Billing'}"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Foreground="White" />
                                                         <Button
                                                             Margin="5,3,3,5"
-                                                            FontSize="{DynamicResource FontSize-Normal}"
-                                                            Command="{Binding CancelCartCommand}"
+                                                            Command="{Binding ToggleCartBoxCommand}"
                                                             Content="{multilinguality:Translate 'Pick another package',
                                                                                                 'Billing'}"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Foreground="Black"
                                                             Visibility="{Binding CancelButtonVisibility}" />
                                                         <Button
                                                             Margin="5,3,3,5"
-                                                            FontSize="{DynamicResource FontSize-Normal}"
-                                                            Command="{Binding CancelCartCommand}"
+                                                            Command="{Binding ToggleCartBoxCommand}"
                                                             Content="{multilinguality:Translate 'Add more services',
                                                                                                 'Billing'}"
+                                                            FontSize="{DynamicResource FontSize-Normal}"
                                                             Foreground="Black"
                                                             Visibility="{Binding CancelButtonServicesVisibility}" />
                                                     </Grid>
@@ -409,8 +412,10 @@
                                     SelectCommand="{Binding SelectCommand}" />
                             </TabItem>
                             <TabItem Name="limitedServicesTab" Header="Services">
-
-                                <my1:ServiceViewer x:Name="servicesControl" />
+                                <my1:ServiceViewer
+                                    x:Name="servicesControl"
+                                    SelectCommand="{Binding SelectCommand}"
+                                    Services="{Binding Services}" />
                             </TabItem>
                         </TabControl>
                     </Grid>
@@ -448,10 +453,10 @@
                             Margin="0,0"
                             Padding="20"
                             HorizontalAlignment="Center"
-                            FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding CompleteCommand}"
                             Content="{multilinguality:Translate 'Start using Panacea',
                                                                 'Billing'}"
+                            FontSize="{DynamicResource FontSize-Large}"
                             Style="{DynamicResource PrimaryButton}"
                             Visibility="{Binding Success, Converter={StaticResource BoolToVis}}" />
                     </StackPanel>
@@ -469,10 +474,10 @@
                             Margin="3"
                             Padding="20"
                             HorizontalAlignment="Center"
-                           FontSize="{DynamicResource FontSize-Large}"
                             Command="{Binding BuyServiceCommand}"
                             Content="{multilinguality:Translate 'Buy Service',
                                                                 'Billing'}"
+                            FontSize="{DynamicResource FontSize-Large}"
                             Style="{DynamicResource PrimaryButton}"
                             Visibility="{Binding Success, Converter={StaticResource NotBoolToVis}}" />
 

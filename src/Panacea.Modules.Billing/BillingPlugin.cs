@@ -18,6 +18,7 @@ namespace Panacea.Modules.Billing
         private IBillingSettings _settings;
         BillingManager _manager;
         List<string> _freePlugins;
+        List<string> _nonFreePlugins;
         SettingsControlViewModel _settingsControl;
 
         [PanaceaInject("AllFree", "Makes all plugins free", "AllFree=1")]
@@ -48,6 +49,7 @@ namespace Panacea.Modules.Billing
                     if (res.Success)
                     {
                         _freePlugins = res.Result.FreePlugins;
+                        _nonFreePlugins = res.Result.PaidPlugins;
                         if (AllFree)
                         {
                             _freePlugins.Add("*");
@@ -93,7 +95,7 @@ namespace Panacea.Modules.Billing
 
         public IBillingManager GetBillingManager()
         {
-            return _manager = _manager ?? new BillingManager(_core, _freePlugins);
+            return _manager = _manager ?? new BillingManager(_core, _freePlugins, _nonFreePlugins);
         }
 
         private async Task UserService_UserLoggedOut(IUser user)

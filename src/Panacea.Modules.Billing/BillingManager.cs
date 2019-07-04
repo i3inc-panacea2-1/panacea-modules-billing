@@ -17,13 +17,15 @@ namespace Panacea.Modules.Billing
     class BillingManager : IBillingManager
     {
         private readonly PanaceaServices _core;
+        private readonly List<string> _paidPlugins;
         private readonly List<string> _freePlugins;
         private List<Service> _services;
         IBillingSettings _settings;
 
-        public BillingManager(PanaceaServices core, List<string> freePlugins)
+        public BillingManager(PanaceaServices core, List<string> freePlugins, List<string> paidPlugins)
         {
             _core = core;
+            _paidPlugins = paidPlugins;
             _freePlugins = freePlugins;
         }
 
@@ -393,7 +395,7 @@ namespace Panacea.Modules.Billing
 
         public bool IsPluginFree(string plugnName)
         {
-            return _freePlugins.Any(p => p == plugnName || p =="*");
+            return _freePlugins.Any(p => p == plugnName || p == "*") || !_paidPlugins.Any(p => p == plugnName);
         }
 
         protected Task UpdateUserServicesWithUiAsync()

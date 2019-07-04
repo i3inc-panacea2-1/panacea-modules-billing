@@ -38,7 +38,19 @@ namespace Panacea.Modules.Billing.Controls
             set { SetValue(ServicesProperty, value); }
         }
 
-        public event EventHandler Click;
+
+
+        public ICommand SelectCommand
+        {
+            get { return (ICommand)GetValue(SelectCommandProperty); }
+            set { SetValue(SelectCommandProperty, value); }
+        }
+
+  
+      public static readonly DependencyProperty SelectCommandProperty =
+            DependencyProperty.Register("SelectCommand", typeof(ICommand), typeof(ServiceViewer), new PropertyMetadata(null));
+
+
 
         private void Grid_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -47,8 +59,7 @@ namespace Panacea.Modules.Billing.Controls
             package = el.Tag;
             if (!(package as Service).IsMore)
                 (package as Service).IsChecked = !(package as Service).IsChecked;
-            Click?.Invoke(package, EventArgs.Empty);
-
+            SelectCommand?.Execute(package);
         }
 
         public List<Service> GetSelectedServices()

@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.Integration;
+using System.Windows.Input;
 
 namespace Panacea.Modules.Billing.ViewModels
 {
@@ -31,6 +32,20 @@ namespace Panacea.Modules.Billing.ViewModels
             _core = core;
             _source = source;
             SelectedItems = new ObservableCollection<Service>();
+            RemoveServiceCommand = new RelayCommand(args =>
+            {
+                SelectedItems.Remove(args as Service);
+                if (!SelectedItems.Any())
+                {
+                    CartBoxIsOpen = false;
+                }
+            });
+            SwitchToServicesCommand = new RelayCommand(args =>
+            {
+                if (SelectedIndex == 0)
+                    SelectedIndex = 1;
+                else SelectedIndex = 0;
+            });
             BuyServiceCommand = new RelayCommand(arg =>
             {
                 SelectedItems.Clear();
@@ -241,6 +256,7 @@ namespace Panacea.Modules.Billing.ViewModels
         void CreateWebBrowser()
         {
             _webBrowser = new System.Windows.Forms.WebBrowser();
+            _webBrowser.ScriptErrorsSuppressed = true;
             _host = new WindowsFormsHost()
             {
                 Child = _webBrowser
@@ -255,14 +271,21 @@ namespace Panacea.Modules.Billing.ViewModels
         {
             var regex = new Regex(@"billing\/([^\/]*)\/([^\/]*)\/");
             var match = regex.Match(e.Url.ToString().ToLower());
-            if (match.Success)
+            if (match.Success && match.Groups.Count >= 2)
             {
-                Success = match.Groups[2].Value == "completed";
-                TabsSelectedIndex = 2;
-                if (_core.TryGetUiManager(out IUiManager ui))
+                if (match.Groups[1].Value.Contains("payment"))
                 {
-                    ui.Back -= Ui_Back;
+                    if (match.Groups[2].Value == "completed" || match.Groups[2].Value == "rejected")
+                    {
+                        Success = match.Groups[2].Value == "completed";
+                        TabsSelectedIndex = 2;
+                        if (_core.TryGetUiManager(out IUiManager ui))
+                        {
+                            ui.Back -= Ui_Back;
+                        }
+                    }
                 }
+               
             }
         }
 
@@ -294,6 +317,8 @@ namespace Panacea.Modules.Billing.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public bool PackagesTextVisible { get; set; } = true;
 
         Visibility _cancelButtonVisibility;
         public Visibility CancelButtonVisibility
@@ -345,7 +370,12 @@ namespace Panacea.Modules.Billing.ViewModels
             get => _cartBoxIsOpen;
             set
             {
-                if (!SelectedItems.Any()) return;
+                if (!SelectedItems.Any())
+                {
+                    _cartBoxIsOpen = false;
+                    OnPropertyChanged();
+                    return;
+                }
                 _cartBoxIsOpen = value;
                 OnPropertyChanged();
             }
@@ -371,6 +401,20 @@ namespace Panacea.Modules.Billing.ViewModels
             set
             {
                 _sum = value;
+                OnPropertyChanged();
+            }
+        }
+
+        int _selectedIndex = 0;
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                _selectedIndex = value;
+
+                PackagesTextVisible = value == 0;
+                OnPropertyChanged(nameof(PackagesTextVisible));
                 OnPropertyChanged();
             }
         }
@@ -443,7 +487,7 @@ namespace Panacea.Modules.Billing.ViewModels
 
         public override async void Activate()
         {
-            if(_core.TryGetUiManager(out IUiManager ui))
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
                 ui.Back += Ui_Back;
             }
@@ -457,7 +501,7 @@ namespace Panacea.Modules.Billing.ViewModels
                 TabsSelectedIndex--;
                 e.Cancel = true;
             }
-           
+
         }
 
         public override void Deactivate()
@@ -614,5 +658,9 @@ namespace Panacea.Modules.Billing.ViewModels
 
             _webBrowser.Navigate(url, null, post, additionalHeaders);
         }
+
+        public ICommand SwitchToServicesCommand { get; }
+
+        public ICommand RemoveServiceCommand { get; }
     }
 }
