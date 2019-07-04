@@ -15,6 +15,7 @@ namespace Panacea.Modules.Billing
     public class BillingPlugin : IBillingPlugin
     {
         private readonly PanaceaServices _core;
+        private IBillingSettings _settings;
         BillingManager _manager;
         List<string> _freePlugins;
         SettingsControlViewModel _settingsControl;
@@ -37,19 +38,33 @@ namespace Panacea.Modules.Billing
 
         public async Task EndInit()
         {
-            var res = await _core.HttpClient.GetObjectAsync<GetFreePluginsResponse>("get_versions/", allowCache: false);
-            if (res.Success)
+            var fetched = false;
+            while (!fetched)
             {
-                _freePlugins = res.Result.FreePlugins;
-                if (AllFree)
+                try
                 {
-                    _freePlugins.Add("*");
+                    var res = await _core.HttpClient.GetObjectAsync<GetFreePluginsResponse>("get_versions/", allowCache: false);
+                    fetched = true;
+                    if (res.Success)
+                    {
+                        _freePlugins = res.Result.FreePlugins;
+                        if (AllFree)
+                        {
+                            _freePlugins.Add("*");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception(res.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _core.Logger.Error(this, ex.Message);
+                    await Task.Delay(5000);
                 }
             }
-            else
-            {
-                throw new Exception(res.Error);
-            }
+           
             if (_core.TryGetUiManager(out IUiManager ui))
             {
                 _settingsControl = new SettingsControlViewModel(GetBillingManager());
