@@ -88,7 +88,7 @@ namespace Panacea.Modules.Billing
         #region ICallable
         public void Call()
         {
-
+            GetBillingManager().NavigateToBuyServiceWizard();
         }
         #endregion
 
